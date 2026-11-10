@@ -1,0 +1,68 @@
+<div id="app">
+  <canvas id="view" aria-label="Hidden Ember game view"></canvas>
+  <div id="vignette"></div>
+  <div class="bar top"></div><div class="bar bottom"></div>
+  <div id="dmg"></div>
+
+  <div id="hud" hidden>
+    <div class="me">
+      <div class="me-name"><span id="hero-name">KAZE</span><small id="hero-title">The Gale</small></div>
+      <div class="meter hp"><i id="hp"></i><b id="hp-lag"></b></div>
+      <div class="meter ki"><i id="ki"></i></div>
+      <div class="pills"><span id="buff" hidden>Well fed</span><span id="look-name">Golden hour</span></div>
+    </div>
+    <div class="foes" id="foes" hidden>
+      <div class="foe"><span>GOUMA <small>The Undertow</small></span><div class="meter foe-hp"><i id="foe0"></i></div></div>
+      <div class="foe"><span>YORU <small>The Hush</small></span><div class="meter foe-hp"><i id="foe1"></i></div></div>
+    </div>
+    <div class="map"><canvas id="minimap" width="300" height="300"></canvas></div>
+    <div class="objective"><small>Objective</small><p id="objective"></p></div>
+    <div class="keys" id="keys">
+      <span><kbd>WASD</kbd> move</span><span><kbd>Shift</kbd> sprint</span><span><kbd>Space</kbd> jump ×2</span>
+      <span><kbd>J</kbd> / click strike</span><span><kbd>K</kbd> <em id="key-special">special</em></span><span><kbd>L</kbd> dash</span>
+      <span><kbd>F</kbd> throw</span><span><kbd>E</kbd> interact</span><span><kbd>T</kbd> time</span><span><kbd>C</kbd> cinema</span><span><kbd>H</kbd> hide HUD</span>
+    </div>
+    <div id="prompt" hidden><kbd>E</kbd><span></span></div>
+  </div>
+
+  <div id="touch">
+    <div class="stick"><div class="knob"></div></div>
+    <div class="pad">
+      <button type="button" data-act="interact" class="t-small" id="t-interact">USE</button>
+      <button type="button" data-act="throw" class="t-small">STAR</button>
+      <button type="button" data-act="special" class="t-mid">KI</button>
+      <button type="button" data-act="dash" class="t-mid">DASH</button>
+      <button type="button" data-act="jump" class="t-mid">JUMP</button>
+      <button type="button" data-act="attack" class="t-big">HIT</button>
+    </div>
+  </div>
+
+  <div id="dialog" hidden>
+    <div class="who"></div>
+    <p class="line"></p>
+    <span class="next">continue</span>
+  </div>
+  <div id="card" hidden><p class="card-sub"></p><h2></h2></div>
+  <div id="callout" hidden></div>
+  <div id="toast" hidden></div>
+
+  <section id="title">
+    <div class="title-side" aria-hidden="true">篝火の里</div>
+    <header>
+      <p class="eyebrow">A playable anime village, built entirely from code</p>
+      <h1>HIDDEN<br><span>EMBER</span></h1>
+      <p class="lede">Every dusk one shinobi carries the village flame to the top of the pagoda. Tonight two strangers in grey cloaks got there first.</p>
+    </header>
+    <div class="pick">
+      <p class="pick-label">Choose your Lamplighter</p>
+      <div class="heroes" id="heroes"></div>
+      <div class="go-row">
+        <button type="button" id="start">Enter the village</button>
+        <p class="hint" id="title-hint">Roam the rooftops, eat ramen, then answer the knock at the pagoda.</p>
+      </div>
+    </div>
+  </section>
+
+  <div id="fade"></div>
+  <div id="loading">Raising the village…</div>
+</div>
