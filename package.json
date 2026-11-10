@@ -4,7 +4,9 @@
   "description": "Hidden Ember: a playable anime ninja village generated entirely from code",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "audio": "node scripts/audio-scan.mjs"
+    "audio:fetch": "node scripts/fetch-audio.mjs",
+    "audio:next": "node scripts/fetch-audio.mjs --next",
+    "audio:list": "node scripts/fetch-audio.mjs --list"
   },
   "license": "UNLICENSED",
   "private": true,

@@ -17,23 +17,20 @@ This repository and the play link are public, so every audio file here must be C
 synthesized. Licensed library music (Epidemic Sound, Envato) belongs in the reel edit, not in
 this repo.
 
-Status: **waiting for files.** Raw downloads go in `assets/audio/inbox/`; they are then trimmed,
-converted to mp3 and renamed to the slot names below, and this table is filled in with the exact
-source page of each file.
+`npm run audio:fetch` fills the slots from Freesound (CC0 filter, best-rated first) and writes
+`assets/audio/SOURCES.md`: asset, author, source page, licence, where it is used and your action
+for every file. That generated file is the licensing report for the audio.
 
-| Slot file | Where it plays | Shortlisted CC0 source | Licence | Status |
-| --- | --- | --- | --- | --- |
-| `music_village` | Exploring, loops | "calm theme" by pebonius, OpenGameArt | CC0 | to download |
-| `music_battle` | Boss duel, loops | "BOSS-i" by Uran235 (koto and drums, loopable), OpenGameArt | CC0 | to download |
-| `amb_village` | Under everything, loops | "Forest Ambience" by TinyWorlds, OpenGameArt | CC0 | to download |
-| `sfx_hit`, `sfx_hurt` | Landed strikes, damage taken | Kenney "Impact Sounds"; "37 hits/punches" by qubodup, OpenGameArt | CC0 | to download |
-| `sfx_whoosh`, `sfx_dash`, `sfx_jump` | Swings, dash, jump | "Swishes Sound Pack", OpenGameArt; Kenney "RPG Audio" | CC0 | to download |
-| `sfx_ui` | Dialogue advance | Kenney "Interface Sounds" | CC0 | to download |
-| `sfx_victory` | Duel won | Kenney "Music Jingles" | CC0 | to download |
-| `sfx_firework` | Finale | "25 CC0 bang / firework SFX" by rubberduck, OpenGameArt | CC0 | to download |
-| `sfx_bell` | Omen and beacon | "100 CC0 SFX" (gong and bell clips), OpenGameArt | CC0 | to download |
-| `sfx_special` | Special move | not found yet | CC0 needed | open |
-| `sfx_slurp` | Ramen scene | not found yet | CC0 needed | open |
-
-Licences above come from the sites' listings; confirm the licence line on each page when
-downloading.
+| Slot file | Where it plays |
+| --- | --- |
+| `music_village.mp3` | Exploring, loops |
+| `music_battle.mp3` | Boss duel, loops |
+| `amb_village.mp3` | Under everything, loops |
+| `sfx_hit.mp3`, `sfx_hurt.mp3` | Landed strikes, damage taken |
+| `sfx_whoosh.mp3`, `sfx_dash.mp3`, `sfx_jump.mp3` | Swings and throwing star, dash, jump |
+| `sfx_special.mp3` | Special move |
+| `sfx_slurp.mp3` | Ramen scene |
+| `sfx_bell.mp3` | Omen and beacon |
+| `sfx_ui.mp3` | Dialogue advance |
+| `sfx_firework.mp3` | Finale |
+| `sfx_victory.mp3` | Duel won |

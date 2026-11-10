@@ -54,8 +54,25 @@ Chrome or Edge gives the best frame rate. It also runs on Android Chrome with to
 
 Nothing is synthesized. The game plays real audio files from `assets/audio/`, and because this
 repository is public, only CC0 / public-domain audio goes in it. A slot with no file stays silent.
-`ASSETS.md` lists every slot, its source and its licence. To add or swap a sound, put the file in
-`assets/audio/` under the slot's name and run `npm run build`.
+
+One command fills every slot with well-rated CC0 sounds from Freesound, using your own free API
+key (create one at https://freesound.org/apiv2/apply and copy "Client secret/Api key"; the script
+asks for it once and stores it in `.freesound-key`, which git ignores):
+
+```bash
+npm run audio:fetch
+```
+
+Listen by opening `play.html`. If a sound is wrong, switch that slot to the next candidate:
+
+```bash
+npm run audio:next -- sfx_hit
+```
+
+`npm run audio:list` shows every slot and its alternatives. The script writes
+`assets/audio/SOURCES.md`, the licensing record of every file. To use a file of your own instead,
+save it in `assets/audio/` under the slot's name (for example `music_battle.mp3`) and run
+`npm run build`.
 
 ## Change it and rebuild
 
