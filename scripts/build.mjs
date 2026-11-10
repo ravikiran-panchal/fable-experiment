@@ -8,10 +8,10 @@ import path from 'node:path';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const r = (...p) => path.join(root, ...p);
 
-async function bundle(audio) {
+async function bundle() {
   const out = await build({
     entryPoints: [r('src', 'main.js')], bundle: true, minify: true, format: 'iife', target: 'es2020',
-    write: false, legalComments: 'none', define: { __AUDIO__: String(audio) },
+    write: false, legalComments: 'none',
   });
   return out.outputFiles[0].text.replace(/<\/script/gi, '<\\/script');
 }
@@ -24,14 +24,18 @@ const head = `<title>Hidden Ember</title>\n<meta name="claude:viewport-fit-sides
 
 await mkdir(r('dist'), { recursive: true });
 
-// 1) Standalone file: open play.html directly. Audio hooks on (reads assets/audio/ next to it if present).
-const jsLocal = await bundle(true);
-await writeFile(r('play.html'),
-  `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n${head}\n</head>\n<body>\n${body}\n<script src="assets/audio/audio-list.js"></script>\n<script>\n${jsLocal}\n</script>\n</body>\n</html>\n`);
+const SITE = 'https://ravikiran-panchal.github.io/fable-experiment/';
+const DESC = 'A playable 3D anime ninja village built entirely from code. Roam the rooftops, eat ramen, duel two rogues at the pagoda and light the beacon.';
+const share = `<meta name="description" content="${DESC}">\n<meta property="og:type" content="website">\n<meta property="og:title" content="Hidden Ember">\n<meta property="og:description" content="${DESC}">\n<meta property="og:url" content="${SITE}">\n<meta property="og:image" content="${SITE}cover.jpg">\n<meta name="twitter:card" content="summary_large_image">\n<meta name="theme-color" content="#0e0b16">`;
+const js = await bundle();
 
-// 2) Page fragment for publishing as a Claude artifact (the host adds its own html/head/body wrapper). No audio lookups.
-const jsWeb = await bundle(false);
-await writeFile(r('dist', 'hidden-ember.artifact.html'), `${head}\n${body}\n<script>\n${jsWeb}\n</script>\n`);
+// 1) The game as one file. play.html is for double-clicking; index.html is the same file for the public
+//    GitHub Pages link. Both read assets/audio/ next to them.
+const page = `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n${share}\n${head}\n</head>\n<body>\n${body}\n<script src="assets/audio/audio-list.js"></script>\n<script>\n${js}\n</script>\n</body>\n</html>\n`;
+await writeFile(r('play.html'), page);
+await writeFile(r('index.html'), page);
 
-const kb = (s) => (Buffer.byteLength(s) / 1024).toFixed(0) + ' KB';
-console.log('built play.html', kb(jsLocal), '| dist/hidden-ember.artifact.html', kb(jsWeb));
+// 2) Page fragment for the Claude artifact link (the host adds its own html/head/body wrapper). Always silent.
+await writeFile(r('dist', 'hidden-ember.artifact.html'), `${head}\n${body}\n<script>\n${js}\n</script>\n`);
+
+console.log('built play.html + index.html', (Buffer.byteLength(js) / 1024).toFixed(0) + ' KB', '| dist/hidden-ember.artifact.html');

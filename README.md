@@ -8,8 +8,10 @@ Built in one session with Claude (Fable 5.2) inside Claude Code.
 
 ## Play it
 
-Double-click `play.html`. That is the whole install, on Windows and macOS.
-Chrome or Edge gives the best frame rate.
+- **Online:** https://ravikiran-panchal.github.io/fable-experiment/ (GitHub Pages, served from this repo's `main` branch)
+- **Offline:** double-click `play.html`. That is the whole install, on Windows and macOS.
+
+Chrome or Edge gives the best frame rate. It also runs on Android Chrome with touch controls.
 
 ## What is in it
 
@@ -50,9 +52,10 @@ Chrome or Edge gives the best frame rate.
 
 ## Sound
 
-The game ships silent on purpose: nothing is synthesized. Drop licensed files into
-`assets/audio/` using the names in `ASSETS.md`, then run the build once. See `ASSETS.md` for the
-slot list and the licensing sheet.
+Nothing is synthesized. The game plays real audio files from `assets/audio/`, and because this
+repository is public, only CC0 / public-domain audio goes in it. A slot with no file stays silent.
+`ASSETS.md` lists every slot, its source and its licence. To add or swap a sound, put the file in
+`assets/audio/` under the slot's name and run `npm run build`.
 
 ## Change it and rebuild
 
@@ -66,8 +69,8 @@ npm install
 npm run build
 ```
 
-`npm run build` rewrites `play.html` (and `dist/hidden-ember.artifact.html`, the copy used for
-the Claude artifact link). Source lives in `src/`:
+`npm run build` rewrites `play.html`, `index.html` (the same file, for the public link) and
+`dist/hidden-ember.artifact.html` (the silent copy used for the Claude artifact link). Source lives in `src/`:
 
 | File | What it holds |
 | --- | --- |

@@ -40,7 +40,7 @@ G.env = new Env(scene, renderer);
 G.world = new World(scene);
 G.fx = new FX(scene);
 G.input = new Input(canvas, document.getElementById('touch'));
-G.audio = new GameAudio((typeof __AUDIO__ === 'undefined' ? true : __AUDIO__) ? (window.EMBER_AUDIO || []) : []);
+G.audio = new GameAudio(window.EMBER_AUDIO || []);
 G.ui = new UI(G);
 G.story = new Story(G);
 G.projectiles = new Projectiles(G);
@@ -158,6 +158,7 @@ const previews = HEROES.map((h, i) => {
 function start() {
   if (started) return;
   started = true;
+  G.audio.unlock();
   for (const c of previews) scene.remove(c.root);
   const hero = HEROES[picked];
   G.player = new Player(G, hero);
@@ -303,6 +304,7 @@ function tick(dt) {
   G.fx.update(sim, camera, renderer);
   updateCamera(dt);
   G.ui.update(dt, I);
+  G.audio.update(dt);
 
   if (P && (G.frameN = (G.frameN || 0) + 1) % 3 === 0) {
     const m = [{ x: POI.ramenSeat.x, z: POI.ramenSeat.z, color: '#ff7a3c', shape: G.story.phase === 'explore' ? 'diamond' : 'dot', r: 6 }];

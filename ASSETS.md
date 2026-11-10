@@ -9,30 +9,31 @@
 | esbuild | npm `esbuild` | MIT | Build tool only, not shipped | None |
 | Dela Gothic One, Zen Maru Gothic | Google Fonts (loaded online, system fallback offline) | SIL OFL 1.1 | Titles and HUD text | None |
 
-## Audio slots (empty until you fill them)
+| `cover.jpg` | Screenshot of the game's own title screen | Yours | Link preview image | None |
 
-Nothing is synthesized. Each slot plays a file only if it exists in `assets/audio/` with the exact
-name below. After adding files run `npm run build` (or `node scripts/audio-scan.mjs`) so the game
-knows which ones are there. The published Claude artifact link is always silent.
+## Audio (CC0 / public domain only)
 
-| File name | Where it plays | Suggested search | Source | Your action |
+This repository and the play link are public, so every audio file here must be CC0. Nothing is
+synthesized. Licensed library music (Epidemic Sound, Envato) belongs in the reel edit, not in
+this repo.
+
+Status: **waiting for files.** Raw downloads go in `assets/audio/inbox/`; they are then trimmed,
+converted to mp3 and renamed to the slot names below, and this table is filled in with the exact
+source page of each file.
+
+| Slot file | Where it plays | Shortlisted CC0 source | Licence | Status |
 | --- | --- | --- | --- | --- |
-| `music_village.mp3` | Exploring, loops | "japanese lofi koto", "shamisen calm" | Epidemic Sound | Pick, download, drop in |
-| `music_battle.mp3` | Boss duel, loops | "taiko battle", "epic japanese drums" | Epidemic Sound | Pick, download, drop in |
-| `amb_village.mp3` | Under everything, loops | "village ambience birds stream" | Epidemic Sound SFX | Pick, download, drop in |
-| `sfx_hit.mp3` | Every landed strike | "punch impact anime", "body hit" | Epidemic / Envato | Pick, download, drop in |
-| `sfx_whoosh.mp3` | Strike swing, throwing star | "sword whoosh short" | Epidemic / Envato | Pick, download, drop in |
-| `sfx_jump.mp3` | Jump | "cloth jump", "whoosh soft" | Epidemic / Envato | Pick, download, drop in |
-| `sfx_dash.mp3` | Dash | "fast whoosh", "anime dash" | Epidemic / Envato | Pick, download, drop in |
-| `sfx_special.mp3` | Special move | "energy charge release", "magic blast" | Epidemic / Envato | Pick, download, drop in |
-| `sfx_hurt.mp3` | Player takes damage | "impact grunt", "hit heavy" | Epidemic / Envato | Pick, download, drop in |
-| `sfx_slurp.mp3` | Ramen scene | "noodle slurp", "eating soup" | Epidemic / Envato | Pick, download, drop in |
-| `sfx_bell.mp3` | Omen and beacon | "temple bell single" | Epidemic / Envato | Pick, download, drop in |
-| `sfx_ui.mp3` | Dialogue advance | "ui click soft", "wood tick" | Epidemic / Envato | Pick, download, drop in |
-| `sfx_firework.mp3` | Finale | "firework burst single" | Epidemic / Envato | Pick, download, drop in |
-| `sfx_victory.mp3` | Duel won | "victory stinger japanese" | Epidemic / Envato | Pick, download, drop in |
+| `music_village` | Exploring, loops | "calm theme" by pebonius, OpenGameArt | CC0 | to download |
+| `music_battle` | Boss duel, loops | "BOSS-i" by Uran235 (koto and drums, loopable), OpenGameArt | CC0 | to download |
+| `amb_village` | Under everything, loops | "Forest Ambience" by TinyWorlds, OpenGameArt | CC0 | to download |
+| `sfx_hit`, `sfx_hurt` | Landed strikes, damage taken | Kenney "Impact Sounds"; "37 hits/punches" by qubodup, OpenGameArt | CC0 | to download |
+| `sfx_whoosh`, `sfx_dash`, `sfx_jump` | Swings, dash, jump | "Swishes Sound Pack", OpenGameArt; Kenney "RPG Audio" | CC0 | to download |
+| `sfx_ui` | Dialogue advance | Kenney "Interface Sounds" | CC0 | to download |
+| `sfx_victory` | Duel won | Kenney "Music Jingles" | CC0 | to download |
+| `sfx_firework` | Finale | "25 CC0 bang / firework SFX" by rubberduck, OpenGameArt | CC0 | to download |
+| `sfx_bell` | Omen and beacon | "100 CC0 SFX" (gong and bell clips), OpenGameArt | CC0 | to download |
+| `sfx_special` | Special move | not found yet | CC0 needed | open |
+| `sfx_slurp` | Ramen scene | not found yet | CC0 needed | open |
 
-Licensing reminders for the reel itself: Epidemic Sound tracks are cleared for the channels linked
-to your subscription; Envato Elements needs one project licence per end use (register the reel as
-its own project). Audio files are ignored by git (`assets/audio/*.mp3`) so licensed files are never
-pushed to GitHub; carry them between machines with the project folder.
+Licences above come from the sites' listings; confirm the licence line on each page when
+downloading.

@@ -1,7 +1,3 @@
 node_modules/
-assets/audio/*.mp3
-assets/audio/*.wav
-assets/audio/*.ogg
-assets/audio/*.m4a
 .DS_Store
 Thumbs.db
