@@ -133,7 +133,7 @@ const barrier = new THREE.Mesh(
   new THREE.ShaderMaterial({
     transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, uniforms: { t: { value: 0 } },
     vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
-    fragmentShader: 'varying vec2 vUv; uniform float t; void main(){ float a = pow(1.0 - vUv.y, 2.5); float s = 0.6 + 0.4 * sin(vUv.x * 240.0 + t * 3.0 + vUv.y * 8.0); gl_FragColor = vec4(vec3(0.85, 0.8, 1.0) * 1.6, a * s * 0.55); }',
+    fragmentShader: 'varying vec2 vUv; uniform float t; void main(){ float a = pow(clamp(1.0 - vUv.y, 0.0, 1.0), 2.5); float s = 0.6 + 0.4 * sin(vUv.x * 240.0 + t * 3.0 + vUv.y * 8.0); gl_FragColor = vec4(vec3(0.85, 0.8, 1.0) * 1.6, a * s * 0.55); }',
   }),
 );
 barrier.position.set(POI.arena.x, 3.5, POI.arena.z); barrier.visible = false;

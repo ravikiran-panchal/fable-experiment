@@ -49,8 +49,8 @@ export class Env {
           vec3 d = normalize(vDir);
           float h = clamp(d.y, -0.2, 1.0);
           vec3 col = mix(horizon, top, pow(smoothstep(-0.05, 0.75, h), 0.7));
-          col = mix(col, horizon * 0.85, smoothstep(0.0, -0.2, d.y));
-          float s = max(dot(d, normalize(sunDir)), 0.0);
+          col = mix(col, horizon * 0.85, (1.0 - smoothstep(-0.2, 0.0, d.y)));
+          float s = clamp(dot(d, normalize(sunDir)), 0.0, 1.0);
           col += sunCol * (pow(s, 6.0) * 0.22 + pow(s, 48.0) * 0.35);
           col += sunCol * smoothstep(0.9990, 0.9994, s) * 3.0 * disc;
           gl_FragColor = vec4(col, 1.0);

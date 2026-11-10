@@ -17,9 +17,9 @@ void main(){
   float c = cos(vMisc.x), s = sin(vMisc.x);
   p = vec2(p.x * c - p.y * s, p.x * s + p.y * c);
   float a;
-  if (vMisc.y < 0.5) a = smoothstep(0.5, 0.05, length(p));              // soft glow
+  if (vMisc.y < 0.5) a = 1.0 - smoothstep(0.05, 0.5, length(p));              // soft glow
   else if (vMisc.y < 1.5) a = step(length(p * vec2(1.0, 2.3)), 0.46);    // petal
-  else a = smoothstep(0.5, 0.42, length(p));                             // flat toon dot
+  else a = 1.0 - smoothstep(0.42, 0.5, length(p));                             // flat toon dot
   if (a * vColor.a < 0.01) discard;
   gl_FragColor = vec4(vColor.rgb, vColor.a * a);
 }`;

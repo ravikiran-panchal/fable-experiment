@@ -401,7 +401,7 @@ export class World {
           float s = sin(vUv.x * 46.0 + sin(vUv.y * 9.0 + t * 3.0) * 1.5) * 0.5 + 0.5;
           float f = sin((vUv.y + t * 0.55) * 34.0 + vUv.x * 11.0) * 0.5 + 0.5;
           float w = smoothstep(0.35, 0.9, s * 0.6 + f * 0.6);
-          float edge = smoothstep(0.0, 0.12, vUv.x) * smoothstep(1.0, 0.88, vUv.x);
+          float edge = smoothstep(0.0, 0.12, vUv.x) * (1.0 - smoothstep(0.88, 1.0, vUv.x));
           gl_FragColor = vec4(mix(col, vec3(1.0), w), (0.72 + 0.28 * w) * edge);
         }`,
     });
