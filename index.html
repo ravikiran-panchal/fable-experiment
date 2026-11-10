@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b0d12">
+  <meta name="theme-color" content="#12100e">
   <title>Hand Sign Jutsu</title>
   <meta name="description" content="Weave real hand signs in front of your camera and cast original jutsu effects. Runs in the browser; video never leaves your device.">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-screen="gate" data-phase="signing">
+  <canvas id="wall" aria-hidden="true"></canvas>
   <video id="cam" playsinline muted autoplay></video>
   <canvas id="fx"></canvas>
 

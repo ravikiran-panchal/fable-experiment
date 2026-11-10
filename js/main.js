@@ -2,7 +2,8 @@
 import { APP, JUTSU, SIGNS, TEXT } from './names.js';
 import { JUTSU_LIST } from './sequences.js';
 import { classifyFrame, SequenceMatcher } from './signs.js';
-import { signIcon, templateHand } from './icons.js';
+import { signIcon, templateHand, jutsuGlyph } from './icons.js';
+import { paintWall } from './backdrop.js';
 import { sounds } from './audio.js';
 import { Tracker } from './tracker.js';
 import { drawSkeleton } from './effects/util.js';
@@ -48,6 +49,7 @@ $('#lensIcon').innerHTML = signIcon('palm');
 const seqHtml = (seq) => seq.map((s) => `<span class="sign">${signIcon(s)}${SIGNS[s].label}</span>`).join('<span class="arrow">›</span>');
 $('#cards').innerHTML = JUTSU_LIST.map((j) => `
   <button class="card" data-id="${j.id}" style="--c:${j.color}">
+    <span class="glyph">${jutsuGlyph(j.id)}</span>
     <div><span class="sub">${JUTSU[j.id].sub}</span><h3>${JUTSU[j.id].label}</h3></div>
     <div class="seq">${seqHtml(j.sequence)}</div>
   </button>`).join('');
@@ -247,6 +249,7 @@ function resize() {
   S.W = window.innerWidth; S.H = window.innerHeight;
   canvas.width = Math.round(S.W * dpr); canvas.height = Math.round(S.H * dpr);
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  paintWall($('#wall'));
 }
 
 let last = performance.now();

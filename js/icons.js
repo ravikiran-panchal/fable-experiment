@@ -40,3 +40,16 @@ export function templateHand(sign) {
   });
   return pts;
 }
+
+// A small original emblem for each jutsu card.
+const GLYPHS = {
+  sphere: '<circle cx="24" cy="24" r="17"/><path d="M12 24a12 7 0 0 1 24 0M17 14a9 14 30 0 1 15 20M15 31a13 6 -30 0 0 20-12" fill="none"/>',
+  lightning: '<path d="M28 3 9 27h12l-4 18 22-27H26z"/>',
+  eye: '<path d="M3 24Q24 4 45 24 24 44 3 24z"/><circle cx="24" cy="24" r="8" fill="#12100e"/>',
+  sand: '<path d="M4 40Q24-6 44 40z"/><path d="M12 40q12-14 24 0" fill="none"/>',
+  panda: '<circle cx="11" cy="11" r="7" fill="#12100e"/><circle cx="37" cy="11" r="7" fill="#12100e"/><circle cx="24" cy="26" r="18"/><ellipse cx="17" cy="24" rx="4" ry="5.5" fill="#12100e"/><ellipse cx="31" cy="24" rx="4" ry="5.5" fill="#12100e"/>',
+  fire: '<path d="M24 3c3 9 14 14 14 26a14 14 0 0 1-28 0c0-7 4-10 6-15 2 4 3 6 5 6 2-4 1-10 3-17z"/>',
+};
+export function jutsuGlyph(id) {
+  return `<svg viewBox="0 0 48 48" aria-hidden="true">${GLYPHS[id] || ''}</svg>`;
+}
