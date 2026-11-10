@@ -1,8 +1,8 @@
 // Sound is deliberately NOT generated in code. Every slot below plays a real audio file from
 // assets/audio/ (see ASSETS.md for the source and licence of each one). A slot with no file is silent.
 export const SLOTS = {
-  music_village: { file: 'music_village', loop: true, vol: 0.42 },
-  music_battle: { file: 'music_battle', loop: true, vol: 0.5 },
+  music_village: { file: 'music_village', loop: true, vol: 0.21 }, // -6 dB after the first listen
+  music_battle: { file: 'music_battle', loop: true, vol: 0.25 }, // -6 dB after the first listen
   amb_village: { file: 'amb_village', loop: true, vol: 0.3 },
   hit: { file: 'sfx_hit', vol: 0.8 },
   slash: { file: 'sfx_whoosh', vol: 0.55 },
@@ -11,10 +11,10 @@ export const SLOTS = {
   special: { file: 'sfx_special', vol: 0.9 },
   hurt: { file: 'sfx_hurt', vol: 0.8 },
   slurp: { file: 'sfx_slurp', vol: 0.8 },
-  bell: { file: 'sfx_bell', vol: 0.9 },
+  bell: { file: 'sfx_bell', vol: 0.36 }, // gong was too loud: about -8 dB
   ui: { file: 'sfx_ui', vol: 0.45 },
   firework: { file: 'sfx_firework', vol: 0.7 },
-  victory: { file: 'sfx_victory', vol: 0.9 },
+  victory: { file: 'sfx_victory', vol: 0.45 }, // a full fanfare now, so sits at music level
 };
 const PREFER = ['mp3', 'm4a', 'ogg', 'wav'];
 const VOICES = 4; // how many copies of one effect can overlap

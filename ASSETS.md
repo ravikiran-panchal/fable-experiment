@@ -17,9 +17,10 @@ This repository and the play link are public, so every audio file here must be C
 synthesized. Licensed library music (Epidemic Sound, Envato) belongs in the reel edit, not in
 this repo.
 
-`npm run audio:fetch` fills the slots from Freesound (CC0 filter, best-rated first) and writes
-`assets/audio/SOURCES.md`: asset, author, source page, licence, where it is used and your action
-for every file. That generated file is the licensing report for the audio.
+`npm run audio:fetch` cuts every slot from CC0 packs on OpenGameArt and Kenney.nl (listed in
+`scripts/audio-sources.mjs`) and writes `assets/audio/SOURCES.md`: asset, author, source page,
+licence, where it is used and your action for every file. That generated file is the licensing
+report for the audio. The ramen slot uses chopstick and bowl sounds because no CC0 slurp was found.
 
 | Slot file | Where it plays |
 | --- | --- |

@@ -55,24 +55,25 @@ Chrome or Edge gives the best frame rate. It also runs on Android Chrome with to
 Nothing is synthesized. The game plays real audio files from `assets/audio/`, and because this
 repository is public, only CC0 / public-domain audio goes in it. A slot with no file stays silent.
 
-One command fills every slot with well-rated CC0 sounds from Freesound, using your own free API
-key (create one at https://freesound.org/apiv2/apply and copy "Client secret/Api key"; the script
-asks for it once and stores it in `.freesound-key`, which git ignores):
+Every slot is filled from CC0 packs on OpenGameArt and Kenney.nl (no account or key needed). The
+sources are listed in `scripts/audio-sources.mjs` and the picks per slot in `scripts/audio-slots.mjs`.
+To re-create the files on a new machine (needs ffmpeg: `brew install ffmpeg` on Mac, `winget install ffmpeg` on Windows):
 
 ```bash
 npm run audio:fetch
 ```
 
-Listen by opening `play.html`. If a sound is wrong, switch that slot to the next candidate:
+Listen with `play.html`. If a sound is wrong, switch that slot to its next candidate:
 
 ```bash
 npm run audio:next -- sfx_hit
 ```
 
-`npm run audio:list` shows every slot and its alternatives. The script writes
-`assets/audio/SOURCES.md`, the licensing record of every file. To use a file of your own instead,
-save it in `assets/audio/` under the slot's name (for example `music_battle.mp3`) and run
-`npm run build`.
+`npm run audio:list` shows every slot and its alternatives; `npm run audio:next -- sfx_hit 3` jumps
+straight to candidate 3. `assets/audio/SOURCES.md` is the licensing record of every file. To use a
+file of your own instead, save it in `assets/audio/` under the slot's name (for example
+`music_battle.mp3`) and run `npm run build`. `node scripts/serve.mjs` serves the game on
+http://localhost:8765/play.html if a browser refuses to play sound from a double-clicked file.
 
 ## Change it and rebuild
 

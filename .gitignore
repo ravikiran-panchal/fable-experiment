@@ -2,3 +2,5 @@ node_modules/
 .DS_Store
 Thumbs.db
 .freesound-key
+SESSION-HISTORY.md
+assets/audio/_src/

@@ -1,0 +1,16 @@
+{
+  "music_village": 0,
+  "music_battle": 0,
+  "amb_village": 0,
+  "sfx_hit": 0,
+  "sfx_hurt": 0,
+  "sfx_whoosh": 0,
+  "sfx_dash": 0,
+  "sfx_jump": 0,
+  "sfx_special": 0,
+  "sfx_slurp": 0,
+  "sfx_bell": 0,
+  "sfx_ui": 0,
+  "sfx_firework": 0,
+  "sfx_victory": 0
+}
