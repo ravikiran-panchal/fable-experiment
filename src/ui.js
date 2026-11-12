@@ -37,11 +37,16 @@ export class UI {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'hero'; b.id = 'hero-' + h.id; b.style.setProperty('--c', hex(h.color));
       const pips = (n) => Array.from({ length: 5 }, (_, k) => `<u class="${k < n ? 'on' : ''}"></u>`).join('');
-      b.innerHTML = `<b>${h.name}</b><i>${h.title}</i><p>${h.blurb}</p><dl><dt>Power</dt><dd>${pips(h.stats.power)}</dd><dt>Speed</dt><dd>${pips(h.stats.speed)}</dd><dt>Reach</dt><dd>${pips(h.stats.reach)}</dd></dl><em>${h.special}</em><span class="born">Born of ${(AFFINITY[h.id] || []).map((e) => `<u style="color:${hex(ELEMENTS[e].color)}">${ELEMENTS[e].name}</u>`).join(' and ')}</span>`;
+      const born = `<span class="born">Born of ${(AFFINITY[h.id] || []).map((e) => `<u style="color:${hex(ELEMENTS[e].color)}">${ELEMENTS[e].name}</u>`).join(' and ')}</span>`;
+      const about = `<i>${h.title}</i><p>${h.blurb}</p><dl><dt>Power</dt><dd>${pips(h.stats.power)}</dd><dt>Speed</dt><dd>${pips(h.stats.speed)}</dd><dt>Reach</dt><dd>${pips(h.stats.reach)}</dd></dl><em>${h.special}</em>${born}`;
+      // the face is a snapshot of the 3D hero (main.js fills it in); it only shows on phones, where the card shrinks to a face and a name
+      b.innerHTML = `<canvas class="face" width="128" height="128" aria-hidden="true"></canvas><b>${h.name}</b>${about}`;
       b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
-      b.addEventListener('click', () => { this.pick(i); onPick(i); });
+      b.addEventListener('click', () => { this.pick(i); onPick(i); this.heroInfo(h, about); });
       this.el.heroes.appendChild(b);
     });
+    // phones: a tap anywhere else on the title closes the character preview
+    this.el.title.addEventListener('click', (e) => { if (!e.target.closest('.hero') && (!e.target.closest('#hero-info') || e.target.closest('button'))) $('#hero-info').hidden = true; });
     this.el.start.addEventListener('click', onStart);
   }
   // Saved games on the title screen: Continue (latest checkpoint) and a list of earlier ones.
@@ -60,8 +65,16 @@ export class UI {
     this.el.start.textContent = 'New game';
   }
   checkpointName(p) { return CHECKPOINTS[p] || p; }
+  // Phones only (the stylesheet hides it elsewhere): the preview window that opens when a face is tapped.
+  heroInfo(h, about) {
+    const box = $('#hero-info');
+    box.style.setProperty('--c', hex(h.color));
+    box.innerHTML = `<button type="button" class="hi-x" aria-label="Close">×</button><b>${h.name}</b>${about}<button type="button" class="hi-ok">Choose ${h.name[0] + h.name.slice(1).toLowerCase()}</button>`;
+    box.hidden = false;
+  }
+  faceCanvas(i) { return this.el.heroes.children[i]?.querySelector('.face'); }
   pick(i) { [...this.el.heroes.children].forEach((b, k) => b.setAttribute('aria-pressed', k === i ? 'true' : 'false')); }
-  hideTitle() { this.el.title.hidden = true; }
+  hideTitle() { this.el.title.hidden = true; document.documentElement.classList.add('playing'); }
 
   setHero(h) {
     document.documentElement.style.setProperty('--hero', hex(h.color));

@@ -42,39 +42,106 @@ export const SLOTS = {
   amb_fire: { file: 'amb_fire', loop: true, vol: 0.4 },
 };
 const PREFER = ['mp3', 'm4a', 'ogg', 'wav'];
-const VOICES = 4; // how many copies of one effect can overlap
+const DIR = 'assets/audio/';
+const FIRST = ['music_village', 'amb_village']; // what the opening scene plays: these download before anything else
+const FIRST_SFX = ['ui', 'bell', 'jump', 'slash', 'hit', 'dash'];
 
+// How the sound is loaded matters on a phone connection:
+// - Music and ambience (long files) each stream through one <audio> element. Only the opening pair is
+//   fetched up front; the rest are fetched one at a time once the game is running.
+// - Short effects are fetched one at a time and played through Web Audio, so there is one small download
+//   per effect. (The old way made four <audio> elements per effect, about 130 downloads at once, and the
+//   music ran dry a few seconds in on a slow connection.)
+// - Opened by double-click (file://), effects fall back to <audio> elements, because fetch is not allowed there.
 export class GameAudio {
   // `files` is the list written by scripts/audio-scan.mjs, so only files that exist are requested.
   constructor(files) {
-    this.muted = false; this.unlocked = false; this.sfx = {}; this.loops = {}; this.count = 0;
+    this.muted = false; this.unlocked = false; this.sfx = {}; this.loops = {}; this.count = 0; this.ctx = null;
     if (!files || !files.length || typeof Audio === 'undefined') return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    this.web = !!AC && typeof fetch === 'function' && location.protocol !== 'file:';
+    this.AC = AC;
+    // Safari (and every iPhone browser) only lets an <audio> element play later if it was started inside a tap.
+    this.bless = !/Chrome|Chromium|Firefox|Edg\//.test(navigator.userAgent);
     for (const k in SLOTS) {
       const s = SLOTS[k];
       const name = PREFER.map((e) => `${s.file}.${e}`).find((f) => files.includes(f));
       if (!name) continue;
-      const make = () => { const a = new Audio('assets/audio/' + name); a.preload = 'auto'; a.volume = s.loop ? 0 : s.vol; a.loop = !!s.loop; return a; };
-      if (s.loop) this.loops[k] = { el: make(), vol: 0, want: 0, max: s.vol, on: false };
-      else this.sfx[k] = { els: Array.from({ length: VOICES }, make), i: 0 };
+      if (s.loop) {
+        const el = new Audio(); el.preload = FIRST.includes(k) ? 'auto' : 'none'; el.src = DIR + name; el.loop = true; el.volume = 0;
+        this.loops[k] = { el, vol: 0, want: 0, max: s.vol, on: false, retry: 0 };
+      } else if (this.web) this.sfx[k] = { url: DIR + name, vol: s.vol, buf: null, raw: null };
+      else this.sfx[k] = { vol: s.vol, els: [0, 1].map(() => { const a = new Audio(DIR + name); a.preload = 'auto'; a.volume = s.vol; return a; }), i: 0 };
       this.count++;
     }
+    if (this.web) this.fetchSfx();
+  }
+
+  // Effects download one after another (most used first), so they never crowd out the music.
+  async fetchSfx() {
+    const order = [...FIRST_SFX.filter((k) => this.sfx[k]), ...Object.keys(this.sfx).filter((k) => !FIRST_SFX.includes(k))];
+    for (const k of order) {
+      const s = this.sfx[k];
+      try { const r = await fetch(s.url); if (!r.ok) continue; s.raw = await r.arrayBuffer(); this.decode(s); } catch { /* stays silent */ }
+    }
+  }
+  decode(s) {
+    if (!this.ctx || !s.raw || s.buf) return;
+    const raw = s.raw; s.raw = null;
+    try { this.ctx.decodeAudioData(raw, (b) => { s.buf = b; }, () => {}); } catch { /* stays silent */ }
   }
 
   // Browsers only allow sound after a tap or key press. Call this from inside that first gesture.
   unlock() {
     if (this.unlocked) return;
     this.unlocked = true;
-    // play-then-pause while muted marks each element as allowed; `busy` stops us pausing music that has really started
-    const bless = (a, busy = () => false) => { a.muted = true; const p = a.play(); if (p) p.then(() => { if (busy()) return; a.pause(); a.currentTime = 0; a.muted = this.muted; }).catch(() => { if (!busy()) a.muted = this.muted; }); };
-    for (const k in this.sfx) this.sfx[k].els.forEach((a) => bless(a));
-    for (const k in this.loops) { const l = this.loops[k]; if (!l.on) bless(l.el, () => l.on); }
+    if (this.web) {
+      try {
+        this.ctx = new this.AC(); this.out = this.ctx.createGain(); this.out.connect(this.ctx.destination);
+        this.ctx.resume?.();
+        for (const k in this.sfx) this.decode(this.sfx[k]);
+      } catch { this.ctx = null; }
+    }
+    if (this.bless) {
+      // play-then-pause while muted marks each element as allowed; `busy` stops us pausing music that has really started
+      const bless = (a, busy = () => false) => { a.muted = true; const p = a.play(); if (p) p.then(() => { if (busy()) return; a.pause(); a.currentTime = 0; a.muted = this.muted; }).catch(() => { if (!busy()) a.muted = this.muted; }); };
+      if (!this.web) for (const k in this.sfx) this.sfx[k].els.forEach((a) => bless(a));
+      for (const k in this.loops) { const l = this.loops[k]; if (!l.on) bless(l.el, () => l.on); }
+    } else this.warm();
+    // coming back to the tab (or out of a phone call): wake the sound up again
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) this.ctx?.resume?.(); });
+  }
+
+  // Fetch the later music one track at a time, each waiting for the one before, so the first battle or
+  // festival does not open with a silent gap and the music already playing is never starved.
+  async warm() {
+    const ready = (el) => new Promise((res) => {
+      if (el.readyState >= 4) { res(); return; }
+      const done = () => { clearTimeout(t); res(); }, t = setTimeout(done, 30000);
+      el.addEventListener('canplaythrough', done, { once: true }); el.addEventListener('error', done, { once: true });
+    });
+    for (const k of FIRST) if (this.loops[k]) await ready(this.loops[k].el);
+    for (const k in this.loops) {
+      const el = this.loops[k].el;
+      if (el.preload !== 'none') continue;
+      el.preload = 'auto';
+      if (!this.loops[k].on) el.load();
+      await ready(el);
+    }
   }
 
   play(k) {
     const l = this.loops[k];
-    if (l) { l.want = l.max; if (!l.on) { l.on = true; l.el.currentTime = 0; l.el.muted = this.muted; l.el.play().catch(() => { l.on = false; }); } return; }
+    if (l) { l.want = l.max; if (!l.on) { l.on = true; l.retry = 0; try { l.el.currentTime = 0; } catch { /* not loaded yet */ } l.el.muted = this.muted; l.el.play().catch(() => {}); } return; }
     const s = this.sfx[k];
     if (!s || this.muted) return;
+    if (this.web) {
+      if (!this.ctx || !s.buf) return; // not downloaded yet: skip this one rather than play it late
+      if (this.ctx.state !== 'running') this.ctx.resume?.();
+      const src = this.ctx.createBufferSource(), g = this.ctx.createGain();
+      src.buffer = s.buf; g.gain.value = s.vol; src.connect(g); g.connect(this.out); src.start();
+      return;
+    }
     const a = s.els[s.i]; s.i = (s.i + 1) % s.els.length;
     try { a.currentTime = 0; } catch { /* not loaded yet */ }
     a.muted = false;
@@ -90,7 +157,9 @@ export class GameAudio {
       if (!l.on) continue;
       l.vol += Math.sign(l.want - l.vol) * Math.min(Math.abs(l.want - l.vol), dt * 0.5);
       l.el.volume = Math.max(0, Math.min(1, l.vol));
-      if (l.want === 0 && l.vol <= 0.001) { l.el.pause(); l.on = false; }
+      if (l.want === 0 && l.vol <= 0.001) { l.el.pause(); l.on = false; continue; }
+      // music that should be playing but is paused (the phone took the speaker, or the first try was refused): try again once a second
+      if (l.el.paused && (l.retry += dt) > 1) { l.retry = 0; l.el.play().catch(() => {}); }
     }
   }
 

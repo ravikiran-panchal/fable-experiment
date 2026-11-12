@@ -201,6 +201,34 @@ const previews = HEROES.map((h, i) => {
   scene.add(c.root);
   return c;
 });
+// Phone title screen: each hero's face, snapped once from the live 3D scene into the small round buttons.
+let facesLeft = 12, facesAt = 0.3; // a few tries, half a second apart, in case the first frames come out empty
+function snapFaces() {
+  const S = 128, cam = new THREE.PerspectiveCamera(22, 1, 0.1, 600), head = new THREE.Vector3();
+  const target = new THREE.WebGLRenderTarget(S, S, { samples: 4 }), px = new Uint8Array(S * S * 4);
+  const toScreen = new Uint8ClampedArray(256).map((_, v) => Math.round(255 * Math.pow(v / 255, 1 / 2.2))); // the snapshot is in linear light
+  let ok = true;
+  previews.forEach((c, i) => {
+    const cv = G.ui.faceCanvas(i);
+    if (!cv) return;
+    c.J.head.getWorldPosition(head); head.y += 0.25;
+    const ry = c.root.rotation.y;
+    cam.position.set(head.x + Math.sin(ry) * 2, head.y + 0.06, head.z + Math.cos(ry) * 2); cam.lookAt(head);
+    renderer.setRenderTarget(target); renderer.render(scene, cam);
+    renderer.readRenderTargetPixels(target, 0, 0, S, S, px);
+    const img = new ImageData(S, S);
+    let sum = 0;
+    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+      const a = ((S - 1 - y) * S + x) * 4, b = (y * S + x) * 4; // WebGL rows run bottom to top
+      img.data[b] = toScreen[px[a]]; img.data[b + 1] = toScreen[px[a + 1]]; img.data[b + 2] = toScreen[px[a + 2]]; img.data[b + 3] = 255;
+      sum += px[a] + px[a + 1] + px[a + 2];
+    }
+    if (sum < S * S * 6) { ok = false; return; } // an all-black frame: try again later
+    cv.getContext('2d').putImageData(img, 0, 0);
+  });
+  renderer.setRenderTarget(null); target.dispose();
+  if (ok) facesLeft = 0;
+}
 function start(cp = null) {
   if (started) return;
   started = true;
@@ -401,6 +429,7 @@ function frame() {
   const dt = Math.min(0.05, clock.getDelta());
   if (G.turbo) for (let i = 0; i < G.turbo; i++) tick(1 / 30); // test hook: fast-forward
   else tick(dt);
+  if (!started && facesLeft > 0 && G.time > facesAt) { facesLeft--; facesAt = G.time + 0.5; snapFaces(); }
   if (G.quality >= 2) { bloom.strength = 0.42 + G.env.glow * 0.1; composer.render(); }
   else renderer.render(scene, camera);
 

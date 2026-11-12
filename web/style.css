@@ -298,3 +298,48 @@ small { font-size: 0.72em; letter-spacing: 0.08em; text-transform: uppercase; co
 .objective.mini small { color: var(--paper); }
 .objective.mini small::after { content: " ›"; color: var(--ember); }
 .w-timer.spent { opacity: 0.25; }
+
+/* ------------------------------------------------------------ title screen on phones: one screen, no scrolling */
+.face, #hero-info { display: none; }
+.touch:not(.playing) #touch { display: none; } /* no game buttons over the title screen */
+@media (max-height: 560px), (pointer: coarse) {
+  #title { overflow: hidden; gap: 6px; padding-block: max(10px, env(safe-area-inset-top, 0px)) max(10px, env(safe-area-inset-bottom, 0px)); }
+  .eyebrow { margin: 0 0 5px; font-size: 9px; letter-spacing: 0.16em; }
+  .eyebrow b { margin-left: 6px; padding: 0 5px; }
+  #title h1 { font-size: clamp(30px, min(13vh, 12vw), 56px); text-shadow: 0 3px 0 var(--ink); }
+  .lede { margin: 8px 0 0; font-size: 12px; line-height: 1.4; max-width: 64ch; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+  .title-side { display: block; top: 10px; font-size: 18px; border-right-width: 3px; padding-right: 6px; }
+  .pick-label { margin: 0 0 4px; font-size: 10px; }
+  .heroes { display: flex; gap: 6px; }
+  .hero, .hero[aria-pressed="true"] { display: grid; grid-template-columns: none; justify-items: center; gap: 3px; min-width: 62px; padding: 2px 4px 4px; border: 0; background: none; transform: none; }
+  .hero .face { display: block; width: 50px; height: 50px; border-radius: 50%; border: 3px solid rgba(246, 236, 217, 0.4); background: var(--ink-soft); }
+  .hero[aria-pressed="true"] .face { border-color: var(--c); box-shadow: 0 0 0 2px var(--ink), 0 0 14px var(--c); }
+  .hero b { font-size: 13px; text-shadow: 0 2px 0 var(--ink); }
+  .hero:not([aria-pressed="true"]) b { color: var(--paper); }
+  .hero i, .hero p, .hero dl, .hero em, .hero .born { display: none; }
+  .go-row { margin-top: 8px; gap: 8px; }
+  #saves { width: auto; flex-wrap: nowrap; gap: 8px; }
+  #saves button { padding: 6px 12px; font-size: 13px; }
+  #saves button small { font-size: 10px; white-space: nowrap; }
+  #start { font-size: 15px; padding: 9px 20px; box-shadow: 4px 4px 0 var(--ink); }
+  .hint { display: none; }
+  /* the list of checkpoints opens as a panel above the buttons and scrolls inside itself */
+  #saves .cp-list { position: absolute; left: var(--gut-l); bottom: 62px; width: min(720px, calc(100% - 32px)); max-height: calc(100% - 72px); overflow-y: auto; box-sizing: border-box; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; padding: 6px; background: rgba(14, 11, 22, 0.95); border-top: 3px solid var(--ember); z-index: 3; }
+  /* the character preview: opens when a face is tapped */
+  #hero-info { --c: var(--ki); display: grid; gap: 4px; position: absolute; right: var(--gut-r); top: 8px; width: min(280px, calc(100% - 32px)); max-height: calc(100% - 74px); overflow-y: auto; box-sizing: border-box; padding: 8px 14px 10px; background: rgba(14, 11, 22, 0.92); border-top: 4px solid var(--c); z-index: 2; }
+  #hero-info > b { font-family: var(--display); font-weight: 400; font-size: 24px; line-height: 1; color: var(--c); }
+  #hero-info i { font-style: normal; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--paper-dim); font-weight: 700; }
+  #hero-info p { margin: 0; font-size: 13px; line-height: 1.35; }
+  #hero-info dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; margin: 0; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--paper-dim); align-items: center; }
+  #hero-info dd { margin: 0; display: flex; gap: 3px; }
+  #hero-info dd u { width: 14px; height: 6px; background: rgba(246, 236, 217, 0.2); transform: skewX(-18deg); }
+  #hero-info dd u.on { background: var(--c); }
+  #hero-info em { font-style: normal; font-size: 12px; font-weight: 700; color: var(--c); }
+  #hero-info .born { font-size: 11px; font-weight: 700; color: var(--paper-dim); }
+  #hero-info .born u { text-decoration: none; }
+  #hero-info button { all: unset; box-sizing: border-box; cursor: pointer; font-weight: 700; }
+  #hero-info .hi-x { position: absolute; top: 4px; right: 6px; width: 34px; height: 34px; display: grid; place-items: center; font-size: 22px; color: var(--paper-dim); }
+  #hero-info .hi-ok { margin-top: 2px; padding: 7px 12px; text-align: center; font-size: 13px; background: var(--c); color: var(--ink); }
+}
+@media (max-height: 350px) { .lede { display: none; } }
+@media (pointer: coarse) and (orientation: portrait) { #saves .cp-list { grid-template-columns: 1fr; } }
