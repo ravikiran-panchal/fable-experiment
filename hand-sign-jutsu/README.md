@@ -29,12 +29,12 @@ camera tracks: that needs a person in front of a camera.
 
 | Name (label) | What it is | Signs |
 | --- | --- | --- |
-| Windball | Spiral energy sphere | Palm, Fist, Palm |
-| Lightning Burst | Lightning blade | Spike, Blade, Palm |
-| Eyes of the Mystic | Eye awakening (drawn on your real eyes) | Horns, Blade |
-| Suna no Tatte | Sand guardian, sand you can push | Fist, Gate |
-| Panda Tsukiyomo | Genjutsu: bamboo valley of bowing pandas | Spike, Horns, Gate |
-| Gokakyo | Fire stream | Palm, Horns, Blade |
+| Senpū | Spiral energy sphere | Palm, Fist, Palm |
+| Rai | Lightning blade | Spike, Blade, Palm |
+| Yume | Eye awakening (drawn on your real eyes) | Horns, Blade |
+| Kabe | Sand guardian, sand you can push | Fist, Gate |
+| Panda | Genjutsu: bamboo valley of bowing pandas | Spike, Horns, Gate |
+| Kaen | Fire stream | Palm, Horns, Blade |
 
 Signs: **Palm** (open hand), **Fist**, **Blade** (index + middle up), **Spike** (index up),
 **Horns** (index + little finger up), **Gate** (both hands open, apart). None of them needs the hands to
