@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#12100e">
+  <title>Hand Sign Jutsu</title>
+  <meta name="description" content="Weave real hand signs in front of your camera and cast original jutsu effects. Runs in the browser; video never leaves your device.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-screen="gate" data-phase="signing">
+  <canvas id="wall" aria-hidden="true"></canvas>
+  <video id="cam" playsinline muted autoplay></video>
+  <canvas id="fx"></canvas>
+
+  <!-- 1. Allow camera -->
+  <main id="gate" class="screen">
+    <div class="gate-card">
+      <p class="kicker" id="appTitle"></p>
+      <div class="lens" aria-hidden="true"><span id="lensIcon"></span></div>
+      <h1 id="gateTitle"></h1>
+      <p class="lead" id="gateBody"></p>
+      <button id="allowBtn" class="primary"></button>
+      <p id="gateBusy" class="busy" hidden></p>
+      <div id="gateError" class="error" role="alert" hidden></div>
+      <ul class="facts">
+        <li><b>Private.</b> The video never leaves this device.</li>
+        <li><b>Light.</b> Face a window or lamp. Dark rooms lose the hand.</li>
+        <li><b>Distance.</b> Hand about an arm's length from the camera.</li>
+      </ul>
+      <button id="simBtn" class="link"></button>
+    </div>
+  </main>
+
+  <!-- 2. Library -->
+  <main id="library" class="screen" hidden>
+    <header class="lib-head">
+      <p class="kicker" id="libKicker"></p>
+      <h1 id="libTitle"></h1>
+      <p class="lead" id="libHint"></p>
+    </header>
+    <div id="cards" class="cards"></div>
+    <section class="legend">
+      <h2>The six signs</h2>
+      <div id="legend" class="legend-grid"></div>
+    </section>
+  </main>
+
+  <!-- 3. Cast -->
+  <section id="cast" class="screen" hidden>
+    <header class="topbar">
+      <button id="backBtn" class="chip"></button>
+      <div class="cast-title"><b id="castName"></b><span id="castSub"></span></div>
+      <button id="muteBtn" class="chip" aria-label="Sound on or off"></button>
+    </header>
+    <div id="callout" aria-live="polite"></div>
+    <footer class="dock">
+      <p id="status" class="status"></p>
+      <ol id="steps" class="steps"></ol>
+      <p id="hint" class="hint"></p>
+      <div id="simPad" class="simpad" hidden></div>
+      <button id="releaseBtn" class="primary small" hidden></button>
+    </footer>
+  </section>
+
+  <pre id="debug" hidden></pre>
+  <noscript><p style="padding:24px;color:#fff">This site needs JavaScript and a camera.</p></noscript>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

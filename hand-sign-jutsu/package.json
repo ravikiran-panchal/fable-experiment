@@ -1,0 +1,17 @@
+{
+  "name": "hand-sign-jutsu",
+  "version": "0.1.0",
+  "description": "Webcam hand-sign tracker that plays original jutsu effects",
+  "type": "module",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/",
+    "vendor": "node scripts/vendor.mjs",
+    "audio:build": "node scripts/build-audio.mjs"
+  },
+  "devDependencies": {
+    "@mediapipe/tasks-vision": "1.2.2"
+  }
+}
