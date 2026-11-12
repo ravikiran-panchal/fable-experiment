@@ -1,7 +1,7 @@
 // THE NAMES FILE.
 // Every label a visitor reads lives here: app title, jutsu names, sign names, hints.
-// Windball, Lightning Burst and Eyes of the Mystic are original names (12 Nov 2026). The other three are still
-// sound-alikes waiting on Ravi's replacements. Change a label here and it changes everywhere.
+// Jutsu names are short original Japanese words chosen by Ravi on 12 Nov 2026 (Senpū whirlwind, Rai thunder,
+// Yume dream, Kabe wall, Panda, Kaen blaze). They must not echo any existing series.
 // The keys (sphere, lightning, ...) are internal ids used by the code: do not rename those.
 
 export const APP = {
@@ -11,32 +11,32 @@ export const APP = {
 
 export const JUTSU = {
   sphere: {
-    label: 'Windball',
+    label: 'Senpū',
     sub: 'Spiral energy sphere',
     tip: 'Hold your open palm up. Close your fist to compress it, open to burst.',
   },
   lightning: {
-    label: 'Lightning Burst',
+    label: 'Rai',
     sub: 'Lightning blade',
     tip: 'Move your hand fast to slash. The lightning follows your fingers.',
   },
   eye: {
-    label: 'Eyes of the Mystic',
+    label: 'Yume',
     sub: 'Eye awakening',
     tip: 'Look straight into the camera, face well lit.',
   },
   sand: {
-    label: 'Suna no Tatte',
+    label: 'Kabe',
     sub: 'Sand guardian',
     tip: 'Open palms push the sand. A fist gathers it. Let go and the guardian re-forms.',
   },
   panda: {
-    label: 'Panda Tsukiyomo',
+    label: 'Panda',
     sub: 'Genjutsu: the bowing valley',
     tip: 'Raise an open palm and the whole valley bows to you.',
   },
   fire: {
-    label: 'Gokakyo',
+    label: 'Kaen',
     sub: 'Fire stream',
     tip: 'The fire shoots where your fingers point. Sweep it around.',
   },
