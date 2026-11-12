@@ -343,3 +343,5 @@ small { font-size: 0.72em; letter-spacing: 0.08em; text-transform: uppercase; co
 }
 @media (max-height: 350px) { .lede { display: none; } }
 @media (pointer: coarse) and (orientation: portrait) { #saves .cp-list { grid-template-columns: 1fr; } }
+/* very short screens (a phone browser with its address bar showing): the preview may use the full height */
+@media (max-height: 310px) { #hero-info { width: min(260px, calc(100% - 32px)); max-height: calc(100% - 16px); } }

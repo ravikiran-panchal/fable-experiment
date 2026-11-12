@@ -202,7 +202,7 @@ const previews = HEROES.map((h, i) => {
   return c;
 });
 // Phone title screen: each hero's face, snapped once from the live 3D scene into the small round buttons.
-let facesLeft = 12, facesAt = 0.3; // a few tries, half a second apart, in case the first frames come out empty
+let facesLeft = 1, facesAt = 0.3; // tried every half second on the title until a frame comes out (the first ones can be empty)
 function snapFaces() {
   const S = 128, cam = new THREE.PerspectiveCamera(22, 1, 0.1, 600), head = new THREE.Vector3();
   const target = new THREE.WebGLRenderTarget(S, S, { samples: 4 }), px = new Uint8Array(S * S * 4);
@@ -227,7 +227,7 @@ function snapFaces() {
     cv.getContext('2d').putImageData(img, 0, 0);
   });
   renderer.setRenderTarget(null); target.dispose();
-  if (ok) facesLeft = 0;
+  if (ok) { facesLeft = 0; G.facesTime = G.time; }
 }
 function start(cp = null) {
   if (started) return;
@@ -429,7 +429,7 @@ function frame() {
   const dt = Math.min(0.05, clock.getDelta());
   if (G.turbo) for (let i = 0; i < G.turbo; i++) tick(1 / 30); // test hook: fast-forward
   else tick(dt);
-  if (!started && facesLeft > 0 && G.time > facesAt) { facesLeft--; facesAt = G.time + 0.5; snapFaces(); }
+  if (!started && facesLeft > 0 && G.time > facesAt) { facesAt = G.time + 0.5; snapFaces(); }
   if (G.quality >= 2) { bloom.strength = 0.42 + G.env.glow * 0.1; composer.render(); }
   else renderer.render(scene, camera);
 
