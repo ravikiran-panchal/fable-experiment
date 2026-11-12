@@ -9,6 +9,9 @@ export const LOOKS = {
   dusk:   { top: C(0x1d2459), horizon: C(0xd4667c), fog: C(0x7a5078), sun: C(0xff7a66), sunI: 1.5, hemiSky: C(0x8f88d8), hemiGround: C(0x5a3c50), hemiI: 1.0, elev: 0.10, azim: -1.9, glow: 2.2, stars: 0.45, fogNear: 50, fogFar: 300, water: C(0x5b5fa8) },
   night:  { top: C(0x050a20), horizon: C(0x1c2f66), fog: C(0x111b3c), sun: C(0x9db8ff), sunI: 1.15, hemiSky: C(0x5a74c8), hemiGround: C(0x1c2238), hemiI: 0.85, elev: 0.75, azim: 0.9, glow: 3.0, stars: 1.0, fogNear: 40, fogFar: 280, water: C(0x1d3a78) },
   omen:   { top: C(0x16071f), horizon: C(0x8a1f3c), fog: C(0x3d1430), sun: C(0xff8f9c), sunI: 1.7, hemiSky: C(0xa0508c), hemiGround: C(0x2a1024), hemiI: 0.95, elev: 0.22, azim: -2.9, glow: 2.6, stars: 0.3, fogNear: 35, fogFar: 240, water: C(0x5a2a5c) },
+  // the two dream sets
+  dream:  { top: C(0x2a78e0), horizon: C(0xdcefff), fog: C(0xeaf5ff), sun: C(0xffffff), sunI: 2.5, hemiSky: C(0xe6f2ff), hemiGround: C(0xbcd8f4), hemiI: 1.55, elev: 1.05, azim: -2.0, glow: 0.8, stars: 0.0, fogNear: 200, fogFar: 1100, water: C(0x9fd4ff) },
+  valley: { top: C(0x2f6fd8), horizon: C(0xffd9b0), fog: C(0xd6e8e2), sun: C(0xffe2b4), sunI: 2.9, hemiSky: C(0xcfe4ff), hemiGround: C(0x7fa868), hemiI: 1.3, elev: 0.55, azim: -2.5, glow: 1.2, stars: 0.0, fogNear: 140, fogFar: 760, water: C(0x4fc0d8) },
 };
 export const CYCLE = ['golden', 'day', 'dusk', 'night'];
 

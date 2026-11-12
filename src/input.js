@@ -1,7 +1,7 @@
 // Keyboard, mouse and touch, folded into one set of named actions.
 const KEYS = {
   jump: ['Space'], sprint: ['ShiftLeft', 'ShiftRight'], attack: ['KeyJ'], dash: ['KeyL', 'KeyQ'], special: ['KeyK', 'KeyR'],
-  throw: ['KeyF'], interact: ['KeyE', 'Enter'], time: ['KeyT'], cine: ['KeyC'], hud: ['KeyH'], quality: ['KeyG'], sound: ['KeyM'],
+  throw: ['KeyF'], interact: ['KeyE', 'Enter'], time: ['KeyT'], cine: ['KeyC'], view: ['KeyX'], train: ['KeyZ'], weave: ['KeyV'], camera: ['KeyB'], hud: ['KeyH'], quality: ['KeyG'], sound: ['KeyM'],
   up: ['KeyW'], down: ['KeyS'], left: ['KeyA'], right: ['KeyD'],
   camL: ['ArrowLeft'], camR: ['ArrowRight'], camU: ['ArrowUp'], camD: ['ArrowDown'],
 };

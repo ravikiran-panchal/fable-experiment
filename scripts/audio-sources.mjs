@@ -19,6 +19,9 @@ export const SOURCES = {
   cutlery_pick: { title: 'Cutlery Sounds (pick_cutlery_01)', author: 'TinyWorlds', site: 'OpenGameArt', page: 'https://opengameart.org/content/cutlery-sounds', url: OGA + 'pick_cutlery_01.ogg' },
   cutlery_fork: { title: 'Cutlery Sounds (fork_on_dish_01)', author: 'TinyWorlds', site: 'OpenGameArt', page: 'https://opengameart.org/content/cutlery-sounds', url: OGA + 'fork_on_dish_01.ogg' },
   fanfares10: { title: '10 Fanfares (East Asian)', author: 'Spring Spring', site: 'OpenGameArt', page: 'https://opengameart.org/content/10-fanfares', url: OGA + '10%20fanfares_0.ogg', licNote: 'multi-licensed; used under its CC0 option' },
+  // v3, waiting for a yes before the first download (see ASSETS.md):
+  heavenly: { title: 'Heavenly Loop', author: 'isaiah658', site: 'OpenGameArt', page: 'https://opengameart.org/content/heavenly-loop', url: OGA + 'Heavenly%20Loop_0.ogg' },
+  fireplace: { title: 'Fireplace Sound loop', author: 'PagDev', site: 'OpenGameArt', page: 'https://opengameart.org/content/fireplace-sound-loop', url: OGA + 'fire.wav' },
   k_impact: { title: 'Impact Sounds', author: 'Kenney', site: 'Kenney.nl', page: 'https://kenney.nl/assets/impact-sounds', kenney: 'impact-sounds' },
   k_rpg: { title: 'RPG Audio', author: 'Kenney', site: 'Kenney.nl', page: 'https://kenney.nl/assets/rpg-audio', kenney: 'rpg-audio' },
   k_ui: { title: 'Interface Sounds', author: 'Kenney', site: 'Kenney.nl', page: 'https://kenney.nl/assets/interface-sounds', kenney: 'interface-sounds' },

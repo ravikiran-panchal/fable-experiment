@@ -1,9 +1,13 @@
 {
   "name": "fable-experiment",
-  "version": "0.1.0",
+  "version": "0.3.1",
+  "type": "module",
   "description": "Hidden Ember: a playable anime ninja village generated entirely from code",
   "scripts": {
     "build": "node scripts/build.mjs",
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/",
+    "vendor": "node scripts/vendor.mjs",
     "audio:fetch": "node scripts/fetch-audio.mjs",
     "audio:next": "node scripts/fetch-audio.mjs --next",
     "audio:list": "node scripts/fetch-audio.mjs --list"
@@ -11,6 +15,7 @@
   "license": "UNLICENSED",
   "private": true,
   "devDependencies": {
+    "@mediapipe/tasks-vision": "^1.2.2",
     "esbuild": "^0.24.0",
     "three": "^0.170.0"
   }

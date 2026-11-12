@@ -26,10 +26,12 @@ function part(geo, mat, outline = 0.035) {
   return m;
 }
 
-function faceTexture(spec) {
-  const S = 256, cv = document.createElement('canvas');
-  cv.width = S * 2; cv.height = S;
+// lantern = the Lantern Eye look: a red iris with a flame-shaped pupil inside a lantern frame (an original design).
+function faceTexture(spec, lantern = false) {
+  const S = 256, K = lantern ? 3 : 1, cv = document.createElement('canvas'); // drawn 3x sharper for the close-up
+  cv.width = S * 2 * K; cv.height = S * K;
   const g = cv.getContext('2d');
+  g.scale(K, K);
   const skin = '#' + new THREE.Color(spec.skin).getHexString();
   g.fillStyle = skin; g.fillRect(0, 0, S * 2, S);
   const cx = S; // u = 0.5 is the front of the head once the mesh is turned
@@ -38,9 +40,21 @@ function faceTexture(spec) {
   for (const s of [-1, 1]) {
     const x = cx + s * dx;
     g.fillStyle = '#fff'; g.beginPath(); g.ellipse(x, eyeY, 19, spec.stern ? 15 : 22, 0, 0, TAU); g.fill();
-    g.fillStyle = spec.eye; g.beginPath(); g.ellipse(x + s * -2, eyeY + 2, 12, spec.stern ? 13 : 17, 0, 0, TAU); g.fill();
-    g.fillStyle = '#16121c'; g.beginPath(); g.ellipse(x + s * -2, eyeY + 3, 6, 9, 0, 0, TAU); g.fill();
-    g.fillStyle = '#fff'; g.beginPath(); g.arc(x - 6, eyeY - 7, 4.5, 0, TAU); g.fill();
+    if (lantern) {
+      const ex = x + s * -2, ey = eyeY + 2, ry = spec.stern ? 13 : 17, grd = g.createRadialGradient(ex, ey, 1, ex, ey, 16);
+      grd.addColorStop(0, '#ffb45a'); grd.addColorStop(0.4, '#ff3a22'); grd.addColorStop(1, '#7a0a12');
+      g.fillStyle = grd; g.beginPath(); g.ellipse(ex, ey, 13, ry, 0, 0, TAU); g.fill();
+      g.strokeStyle = '#1a0508'; g.lineWidth = 1.4; g.beginPath(); g.ellipse(ex, ey, 8.6, ry * 0.68, 0, 0, TAU); g.stroke();
+      g.fillStyle = '#14060a'; g.beginPath(); g.moveTo(ex, ey - ry * 0.56); g.quadraticCurveTo(ex + 5.5, ey + 1, ex, ey + ry * 0.56); g.quadraticCurveTo(ex - 5.5, ey + 1, ex, ey - ry * 0.56); g.fill(); // flame pupil
+      g.fillStyle = '#ffd27a'; g.beginPath(); g.ellipse(ex, ey + 2, 1.1, 3.2, 0, 0, TAU); g.fill();
+      g.fillStyle = '#14060a';
+      for (let k = 0; k < 4; k++) { const a = k / 4 * TAU, px = ex + Math.cos(a) * 10.6, py = ey + Math.sin(a) * ry * 0.84; g.beginPath(); g.moveTo(px, py - 1.9); g.lineTo(px + 1.5, py); g.lineTo(px, py + 1.9); g.lineTo(px - 1.5, py); g.fill(); } // lantern frame
+      g.fillStyle = 'rgba(255,255,255,0.85)'; g.beginPath(); g.arc(x - 6, eyeY - 8, 2.4, 0, TAU); g.fill();
+    } else {
+      g.fillStyle = spec.eye; g.beginPath(); g.ellipse(x + s * -2, eyeY + 2, 12, spec.stern ? 13 : 17, 0, 0, TAU); g.fill();
+      g.fillStyle = '#16121c'; g.beginPath(); g.ellipse(x + s * -2, eyeY + 3, 6, 9, 0, 0, TAU); g.fill();
+      g.fillStyle = '#fff'; g.beginPath(); g.arc(x - 6, eyeY - 7, 4.5, 0, TAU); g.fill();
+    }
     g.strokeStyle = '#16121c'; g.lineWidth = 6; g.lineCap = 'round';
     g.beginPath(); g.moveTo(x - 21, eyeY - (spec.stern ? 10 : 15)); g.quadraticCurveTo(x, eyeY - (spec.stern ? 19 : 27), x + 21, eyeY - (spec.stern ? 10 : 15)); g.stroke();
     g.strokeStyle = spec.brow || '#2a2028'; g.lineWidth = 7;
@@ -191,6 +205,7 @@ export function makeCharacter(spec) {
       const b = Math.sin(t * 2.2);
       set('spine', 0.03 + b * 0.015); set('shL', 0.05 + b * 0.03, 0, 0.12); set('shR', 0.05 - b * 0.03, 0, -0.12);
       set('elL', -0.18); set('elR', -0.18); set('head', -0.02 + b * 0.01);
+      if (a.look) set('head', a.look); // looking up (negative) or down
       if (a.guard) { set('shL', -0.7, 0, 0.3); set('elL', -1.5); set('shR', -0.5, 0, -0.3); set('elR', -1.2); set('hipL', -0.25); set('hipR', 0.25); set('knR', 0.35); set('knL', 0.2); bodyY = -0.05; set('body', 0, -0.5); }
     } else if (name === 'move') {
       const sprint = a.run || 0, f = lerp(9.5, 15, sprint), ph = t * f, sw = lerp(0.75, 1.15, sprint);
@@ -273,6 +288,31 @@ export function makeCharacter(spec) {
       set('shL', -0.75, 0, -0.5); set('elL', -1.75); set('shR', -0.75, 0, 0.5); set('elR', -1.75); set('head', 0.08); set('spine', -0.05);
     } else if (name === 'point') {
       set('shR', -1.5, 0, 0.05); set('elR', -0.05); set('shL', 0.1, 0, 0.15); set('body', 0, 0.3);
+    } else if (name === 'dance') { // festival circle dance: hands sweep overhead, feet step in time
+      const b = Math.sin(t * 4), b2 = Math.sin(t * 2);
+      set('shL', -2.2 + b * 0.5, 0, 0.5 + b2 * 0.4); set('shR', -2.2 - b * 0.5, 0, -0.5 + b2 * 0.4); set('elL', -0.6); set('elR', -0.6);
+      set('body', 0, b2 * 0.5); set('head', -0.15, b2 * 0.3);
+      set('hipL', -0.25 - Math.max(0, b) * 0.5); set('knL', 0.3 + Math.max(0, b) * 0.8); set('hipR', -0.25 - Math.max(0, -b) * 0.5); set('knR', 0.3 + Math.max(0, -b) * 0.8);
+      bodyY = Math.abs(b) * 0.06;
+    } else if (name === 'drum') { // taiko: wide stance, sticks fall one after the other
+      const d = Math.sin(t * 9), l = Math.max(0, d), r = Math.max(0, -d);
+      set('shL', -2.0 + l * 1.3, 0, 0.25); set('elL', -0.9 + l * 0.6); set('shR', -2.0 + r * 1.3, 0, -0.25); set('elR', -0.9 + r * 0.6);
+      set('hipL', -0.35, 0, 0.3); set('hipR', -0.35, 0, -0.3); set('knL', 0.6); set('knR', 0.6); set('spine', 0.12); bodyY = -0.1 + Math.abs(d) * 0.03; rate = 30;
+    } else if (name === 'strum') { // shamisen across the body
+      const e = Math.sin(t * 10);
+      set('shL', -0.9, 0, 0.75); set('elL', -1.35); set('shR', -0.55, 0, -0.15); set('elR', -1.5 + e * 0.22); set('spine', 0.08, Math.sin(t * 2) * 0.1); set('head', 0.12, -0.2);
+    } else if (name === 'flute') { // shakuhachi held straight down from the lips
+      set('shL', -1.25, 0, -0.42); set('elL', -1.75); set('shR', -1.05, 0, 0.42); set('elR', -1.6); set('head', 0.12); set('spine', 0.04, Math.sin(t * 1.6) * 0.12);
+    } else if (name === 'drink') { // seated or standing, cup comes up every few seconds
+      const e = smoothstep(0.55, 0.9, Math.sin(t * 1.3 + (a.ph || 0)));
+      if (a.seat) { set('hipL', -1.45); set('knL', 1.5); set('hipR', -1.45); set('knR', 1.5); bodyY = -0.21 - (a.low || 0); }
+      set('shR', -0.6 - e * 1.1, 0, 0.1); set('elR', -1.2 - e * 0.9); set('shL', -0.3, 0, 0.2); set('elL', -0.8); set('head', -e * 0.35); set('spine', 0.08 - e * 0.1);
+    } else if (name === 'soak') { // in the bath: arms out along the rim, head back
+      set('hipL', -1.45); set('knL', 1.5); set('hipR', -1.45); set('knR', 1.5); set('shL', -0.3, 0, 1.25); set('shR', -0.3, 0, -1.25); set('elL', -0.3); set('elR', -0.3); set('head', -0.3); set('spine', -0.12); bodyY = -0.46; rate = 6;
+    } else if (name === 'bow') {
+      set('body', 0.7); set('head', 0.3); set('shL', 0.1, 0, 0.1); set('shR', 0.1, 0, -0.1); rate = 7;
+    } else if (name === 'wave') {
+      set('shR', -2.8, 0, -0.3 + Math.sin(t * 9) * 0.35); set('elR', -0.4); set('shL', 0.05, 0, 0.12); bodyY = Math.abs(Math.sin(t * 6)) * 0.06;
     } else if (name === 'cook') {
       const e = Math.sin(t * 6);
       set('shR', -1.0 + e * 0.15, 0, -0.2); set('elR', -1.1 - e * 0.25); set('shL', -0.8, 0, 0.3); set('elL', -1.2); set('spine', 0.15); set('head', 0.2);
@@ -307,7 +347,11 @@ export function makeCharacter(spec) {
   const flashMats = [mats.skin, mats.top, mats.pants, mats.hair, mats.accent, mats.face];
   function flash(v, color = 0xffffff) { for (const m of flashMats) { m.emissive.set(color); m.emissiveIntensity = v; } }
 
-  return { root, J, mats, update, flash, spec: s };
+  // Swap between the everyday eyes and the Lantern Eye.
+  const faceA = mats.face.map; let faceB = null;
+  function eyes(on) { mats.face.map = on ? (faceB ||= faceTexture(s, true)) : faceA; mats.face.needsUpdate = true; }
+
+  return { root, J, mats, update, flash, eyes, spec: s };
 }
 
 // A translucent copy left behind during fast moves.

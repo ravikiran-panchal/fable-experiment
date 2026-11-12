@@ -44,7 +44,7 @@ export class Player {
     this.state = 'free'; this.t = 0; this.dur = 0; this.combo = 0; this.queued = false; this.hitDone = false;
     this.grounded = true; this.jumps = 0; this.coyote = 0; this.flipT = 0; this.airDash = false;
     this.dashCd = 0; this.throwCd = 0; this.invuln = 0; this.flashT = 0; this.locked = false; this.anim = { name: 'idle' };
-    this.fed = 0; this.rippleT = 0; this.ghostT = 0; this.visible = true; this.inCombat = false;
+    this.fed = 0; this.ward = 0; this.rippleT = 0; this.ghostT = 0; this.visible = true; this.inCombat = false;
     this.color = new THREE.Color(hero.color);
     // glowing orb used by specials
     this.orb = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), new THREE.MeshBasicMaterial({ color: this.color.clone().multiplyScalar(2.2), transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false }));
@@ -91,6 +91,13 @@ export class Player {
   takeHit(dmg, dir, heavy) {
     if (this.invuln > 0 || this.state === 'dash' || this.state === 'down' || this.locked || !this.visible) return false;
     const G = this.G;
+    if (this.ward > 0) { // Dune Ward eats the hit
+      this.ward--; this.invuln = 0.5;
+      G.fx.burst(this.center, 28, { normal: true, color: 0xe0b56a, speed: 7, life: 0.5, size: 0.42, shape: 2, grav: 10, drag: 2 });
+      G.fx.shake(0.25); G.audio.play('j_ward');
+      G.ui.toast(this.ward ? `Dune Ward: ${this.ward} left` : 'Dune Ward spent');
+      return false;
+    }
     this.hp = Math.max(0, this.hp - dmg);
     this.invuln = 0.75; this.flashT = 0.18;
     this.vel.set(dir.x * (heavy ? 13 : 8), heavy ? 7 : 3.5, dir.z * (heavy ? 13 : 8));
@@ -135,7 +142,7 @@ export class Player {
     this.ki = Math.min(this.maxKi, this.ki + (this.fed > 0 ? 11 : 6) * dt);
     this.fed -= dt;
     c.flash(this.flashT > 0 ? 0.9 : 0, 0xff5a5a);
-    c.root.visible = this.visible && !(this.invuln > 0 && this.state !== 'special' && this.state !== 'dash' && Math.floor(this.invuln * 20) % 2 === 0);
+    c.root.visible = this.visible && !(this.invuln > 0 && this.state !== 'special' && this.state !== 'dash' && this.state !== 'cast' && Math.floor(this.invuln * 20) % 2 === 0);
 
     if (this.locked) { // cutscene / seated
       c.update(dt, this.anim);
@@ -203,6 +210,10 @@ export class Player {
       if (this.t >= this.dur) this.setState('free');
     } else if (this.state === 'special') {
       anim = this.special(dt);
+    } else if (this.state === 'cast') { // a woven jutsu leaves the hands (see jutsu.js)
+      anim = { name: 'cast', p: Math.min(1, this.t / Math.min(this.dur, 0.55)) };
+      this.vel.x = damp(this.vel.x, 0, 10, dt); this.vel.z = damp(this.vel.z, 0, 10, dt);
+      if (this.t >= this.dur) this.setState('free');
     } else if (this.state === 'hit') {
       anim = { name: 'hit' };
       if (this.t >= this.dur) this.setState('free');
@@ -635,6 +646,54 @@ export class Yoru extends Rogue {
   }
 }
 
+// ===================================================================================== Staging
+// A "stage" pins a character to a spot and an animation for a scene (festival, class, cutscene).
+// stage: { at: [x, z] or [x, y, z], yaw, anim, orbit: { c, r, w, ph } }
+export function staged(a, G) {
+  const s = a.stage;
+  if (!s) return null;
+  if (s.orbit) { // circling the bonfire
+    const o = s.orbit, ang = G.time * o.w + o.ph;
+    a.pos.set(o.c.x + Math.cos(ang) * o.r, 0, o.c.z + Math.sin(ang) * o.r);
+    a.yaw = Math.atan2(-Math.sin(ang) * o.w, Math.cos(ang) * o.w);
+  } else if (s.at) { if (s.at.length === 3) a.pos.set(s.at[0], s.at[1], s.at[2]); else a.pos.set(s.at[0], 0, s.at[1]); if (s.yaw !== undefined) a.yaw = s.yaw; }
+  return s.anim || { name: 'idle' };
+}
+
+// A named character with a place in the story (innkeeper, teacher, Susake, the class, the chef).
+export class Npc {
+  constructor(G, o) {
+    this.G = G; this.name = o.name; this.color = o.color ?? 0xf6ecd9; this.line = o.line || null;
+    this.char = makeCharacter(o.look); G.scene.add(this.char.root);
+    this.pos = new THREE.Vector3(o.at[0], 0, o.at[1]); this.yaw = o.yaw || 0;
+    this.anim = o.anim || { name: 'idle' }; this.hidden = !!o.hidden; this.stage = null; this.follow = null; this.walk = null; this.speed = o.speed || 6;
+    this.home = { at: [o.at[0], o.at[1]], yaw: this.yaw, anim: this.anim };
+  }
+  goHome() { this.stage = null; this.follow = null; this.walk = null; this.pos.set(this.home.at[0], 0, this.home.at[1]); this.yaw = this.home.yaw; this.anim = this.home.anim; }
+  // Walk or run to a point. Resolves when the character arrives.
+  walkTo(x, z, speed = this.speed) { return new Promise((res) => { this.stage = null; this.walk = { x, z, speed, res }; }); }
+  update(dt) {
+    const c = this.char, G = this.G;
+    c.root.visible = !this.hidden;
+    if (this.hidden) return;
+    let anim = staged(this, G) || (typeof this.anim === 'function' ? this.anim() : this.anim);
+    const goal = this.stage ? null : this.walk || (this.follow && hdist(this.follow.pos, this.pos) > 2.6 ? { x: this.follow.pos.x, z: this.follow.pos.z, speed: Math.max(this.speed, 9) } : null);
+    if (goal) {
+      const dx = goal.x - this.pos.x, dz = goal.z - this.pos.z, d = Math.hypot(dx, dz);
+      if (d < 0.35) { if (this.walk) { const w = this.walk; this.walk = null; w.res(); } }
+      else {
+        const sp = Math.min(goal.speed, d / Math.max(dt, 1e-3));
+        this.pos.x += dx / d * sp * dt; this.pos.z += dz / d * sp * dt;
+        this.pos.y = G.world.resolve(this.pos, 0.3);
+        this.yaw = dampAngle(this.yaw, Math.atan2(dx, dz), 12, dt);
+        anim = { name: 'move', run: clamp((sp - 5) / 5, 0, 1), speed: sp };
+      }
+    } else if (!this.stage && this.follow) this.yaw = dampAngle(this.yaw, Math.atan2(this.follow.pos.x - this.pos.x, this.follow.pos.z - this.pos.z), 6, dt);
+    c.update(dt, anim);
+    c.root.position.copy(this.pos); c.root.rotation.y = this.yaw;
+  }
+}
+
 // ===================================================================================== Villagers
 const VILLAGER_LINES = [
   'The blossoms are late this year. The elders say that means visitors.',
@@ -669,6 +728,8 @@ export class Villager {
     const c = this.char;
     c.root.visible = !this.hidden;
     if (this.hidden) return;
+    const st = staged(this, this.G);
+    if (st) { c.update(dt, st); c.root.position.copy(this.pos); c.root.rotation.y = this.yaw; return; }
     let anim = { name: this.cheer ? 'cheer' : 'idle' };
     const P = this.G.player.pos, near = hdist(P, this.pos) < 4;
     if (near || this.cheer) { this.yaw = dampAngle(this.yaw, Math.atan2(P.x - this.pos.x, P.z - this.pos.z), 6, dt); }

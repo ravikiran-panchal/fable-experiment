@@ -37,9 +37,10 @@ export const SLOTS = [
     { src: 'rpg80', file: 'blade_03.ogg' },
   ] },
   { slot: 'sfx_jump', use: 'Jump', cands: [
+    { src: 'swishes', file: 'swishes/swish-5.wav' },
+    { src: 'swishes', file: 'swishes/swish-2.wav' },
     { src: 'k_rpg', file: 'Audio/cloth1.ogg' },
     { src: 'k_rpg', file: 'Audio/cloth3.ogg' },
-    { src: 'swishes', file: 'swishes/swish-12.wav' },
   ] },
   { slot: 'sfx_special', use: 'Special move', cands: [
     { src: 'magic4', note: 'spell cast, 2.4 s' },
@@ -81,5 +82,49 @@ export const SLOTS = [
     { src: 'k_jingles', file: 'Audio/Pizzicato jingles/jingles_PIZZI07.ogg' },
     { src: 'k_jingles', file: 'Audio/8-Bit jingles/jingles_NES00.ogg' },
     { src: 'k_jingles', file: 'Audio/Sax jingles/jingles_SAX07.ogg' },
+  ] },
+  // ---- v3: chapter one. All cut from packs that were already downloaded for v1.
+  { slot: 'music_festival', use: 'Bonfire festival (loops)', loop: true, lufs: -18, cands: [
+    { src: 'tyhosiasian', note: 'Japanese "plinky" town tune, 3:29' },
+  ] },
+  { slot: 'sfx_coins', use: 'Paying at the inn, job rewards', cands: [
+    { src: 'rpg80', file: 'item_coins_01.ogg' }, { src: 'k_rpg', file: 'Audio/handleCoins.ogg' }, { src: 'rpg80', file: 'item_coins_03.ogg' },
+  ] },
+  { slot: 'sfx_splash', use: 'The bath', cands: [
+    { src: 'sfx100', file: 'splash_01.ogg' }, { src: 'sfx100', file: 'plop_01.ogg' },
+  ] },
+  { slot: 'sfx_door', use: 'Going to bed, entering the training ground', cands: [
+    { src: 'k_rpg', file: 'Audio/doorOpen_1.ogg' }, { src: 'sfx100', file: 'door_open.ogg' },
+  ] },
+  { slot: 'sfx_paper', use: 'Reading the job board', cands: [
+    { src: 'sfx100', file: 'paper_01.ogg' }, { src: 'k_rpg', file: 'Audio/bookFlip1.ogg' },
+  ] },
+  { slot: 'sfx_pickup', use: 'Picking up or handing over a job item', cands: [
+    { src: 'rpg80', file: 'item_gem_01.ogg' }, { src: 'k_ui', file: 'Audio/confirmation_002.ogg' }, { src: 'rpg80', file: 'item_misc_01.ogg' },
+  ] },
+  { slot: 'sfx_job_done', use: 'Job finished', cands: [
+    { src: 'k_jingles', file: 'Audio/Pizzicato jingles/jingles_PIZZI10.ogg' }, { src: 'k_jingles', file: 'Audio/Steel jingles/jingles_STEEL10.ogg' }, { src: 'k_jingles', file: 'Audio/Pizzicato jingles/jingles_PIZZI07.ogg' },
+  ] },
+  { slot: 'sfx_job_fail', use: 'Job failed or dropped', cands: [
+    { src: 'k_ui', file: 'Audio/error_004.ogg' }, { src: 'k_ui', file: 'Audio/back_002.ogg' },
+  ] },
+  { slot: 'sfx_j_tide', use: 'Tide Mend', cands: [
+    { src: 'sfx100', file: 'splash_02.ogg' }, { src: 'sfx100', file: 'splash_01.ogg' },
+  ] },
+  { slot: 'sfx_j_melt', use: 'Mirror Melt (stand-in: a generic spell, not a liquid sound)', cands: [
+    { src: 'rpg80', file: 'spell_02.ogg' }, { src: 'rpg80', file: 'spell_01.ogg' }, { src: 'magic1', note: 'spell cast, 1.6 s' },
+  ] },
+  { slot: 'sfx_j_unmake', use: 'Dust Verdict', cands: [
+    { src: 'rpg80', file: 'stones_01.ogg' }, { src: 'rpg80', file: 'stones_04.ogg' }, { src: 'k_impact', file: 'Audio/impactMining_000.ogg' },
+  ] },
+  { slot: 'sfx_eye_cut', use: 'Lantern Eye close-up', cands: [
+    { src: 'k_impact', file: 'Audio/impactBell_heavy_001.ogg' }, { src: 'sfx100', file: 'slam_01.ogg' },
+  ] },
+  // ---- these two need a download that has not been approved yet. `npm run audio:fetch` will fetch them.
+  { slot: 'music_dream', use: 'The fox dream (loops)', loop: true, lufs: -20, cands: [
+    { src: 'heavenly', note: 'seamless dreamy pad' },
+  ] },
+  { slot: 'amb_fire', use: 'Bonfire crackle (loops)', loop: true, lufs: -22, cands: [
+    { src: 'fireplace', note: 'wood fire loop, whole file' },
   ] },
 ];

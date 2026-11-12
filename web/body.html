@@ -9,7 +9,7 @@
       <div class="me-name"><span id="hero-name">KAZE</span><small id="hero-title">The Gale</small></div>
       <div class="meter hp"><i id="hp"></i><b id="hp-lag"></b></div>
       <div class="meter ki"><i id="ki"></i></div>
-      <div class="pills"><span id="buff" hidden>Well fed</span><span id="look-name">Golden hour</span></div>
+      <div class="pills"><span id="buff" hidden>Well fed</span><span id="look-name">Golden hour</span><span id="sign-pill">Signs: V</span><span id="coins" hidden><svg viewBox="0 0 24 20" aria-hidden="true"><ellipse cx="12" cy="12" rx="10" ry="7.5"/><circle cx="6.5" cy="5" r="3.2"/><circle cx="17.5" cy="5" r="3.2"/></svg><em>12 copper</em></span></div>
     </div>
     <div class="foes" id="foes" hidden>
       <div class="foe"><span>GOUMA <small>The Undertow</small></span><div class="meter foe-hp"><i id="foe0"></i></div></div>
@@ -20,7 +20,7 @@
     <div class="keys" id="keys">
       <span><kbd>WASD</kbd> move</span><span><kbd>Shift</kbd> sprint</span><span><kbd>Space</kbd> jump ×2</span>
       <span><kbd>J</kbd> / click strike</span><span><kbd>K</kbd> <em id="key-special">special</em></span><span><kbd>L</kbd> dash</span>
-      <span><kbd>F</kbd> throw</span><span><kbd>E</kbd> interact</span><span><kbd>T</kbd> time</span><span><kbd>C</kbd> cinema</span><span><kbd>H</kbd> hide HUD</span>
+      <span><kbd>V</kbd> weave signs</span><span><kbd>B</kbd> camera</span><span><kbd>F</kbd> throw</span><span><kbd>E</kbd> interact</span><span><kbd>T</kbd> time</span><span><kbd>X</kbd> camera near/far</span><span><kbd>Z</kbd> train</span><span><kbd>C</kbd> cinema</span><span><kbd>H</kbd> hide HUD</span>
     </div>
     <div id="prompt" hidden><kbd>E</kbd><span></span></div>
   </div>
@@ -30,6 +30,7 @@
     <div class="pad">
       <button type="button" data-act="interact" class="t-small" id="t-interact">USE</button>
       <button type="button" data-act="throw" class="t-small">STAR</button>
+      <button type="button" data-act="weave" class="t-small">SIGN</button>
       <button type="button" data-act="special" class="t-mid">KI</button>
       <button type="button" data-act="dash" class="t-mid">DASH</button>
       <button type="button" data-act="jump" class="t-mid">JUMP</button>
@@ -37,10 +38,37 @@
     </div>
   </div>
 
+  <aside id="weave" hidden aria-label="Sign weave">
+    <div class="w-head"><b>SIGN WEAVE</b><button type="button" id="weave-close" aria-label="Close the weave"><kbd>V</kbd> close</button></div>
+    <div class="w-timer"><i></i></div>
+    <div id="weave-pip" hidden><canvas id="weave-cv" width="240" height="180"></canvas></div>
+    <p id="weave-status"></p>
+    <ul id="weave-list"></ul>
+    <div id="weave-pad"></div>
+    <p id="weave-note"></p>
+    <button type="button" id="weave-cam"></button>
+  </aside>
+  <video id="weave-video" playsinline muted></video>
+
   <div id="dialog" hidden>
     <div class="who"></div>
     <p class="line"></p>
+    <div id="choices"></div>
     <span class="next">continue</span>
+  </div>
+  <div id="wallet" hidden aria-label="Coin purse">
+    <svg viewBox="0 0 200 170" aria-hidden="true">
+      <ellipse class="f-body" cx="100" cy="104" rx="84" ry="60"/>
+      <ellipse class="f-belly" cx="100" cy="122" rx="56" ry="34"/>
+      <circle class="f-body" cx="52" cy="46" r="26"/><circle class="f-body" cx="148" cy="46" r="26"/>
+      <circle class="f-eye" cx="52" cy="44" r="15"/><circle class="f-eye" cx="148" cy="44" r="15"/>
+      <circle class="f-pupil" cx="55" cy="46" r="7"/><circle class="f-pupil" cx="145" cy="46" r="7"/>
+      <path class="f-mouth" d="M34 92 Q100 132 166 92"/>
+      <circle class="f-clasp" cx="92" cy="110" r="7"/><circle class="f-clasp" cx="108" cy="110" r="7"/>
+      <circle class="f-cheek" cx="40" cy="104" r="9"/><circle class="f-cheek" cx="160" cy="104" r="9"/>
+    </svg>
+    <p><b>2</b> copper</p>
+    <div class="w-coins"></div>
   </div>
   <div id="card" hidden><p class="card-sub"></p><h2></h2></div>
   <div id="callout" hidden></div>
@@ -49,16 +77,16 @@
   <section id="title">
     <div class="title-side" aria-hidden="true">篝火の里</div>
     <header>
-      <p class="eyebrow">A playable anime village, built entirely from code</p>
+      <p class="eyebrow">A playable anime village, built entirely from code <b>v3 · Chapter One: the Ether dream</b></p>
       <h1>HIDDEN<br><span>EMBER</span></h1>
-      <p class="lede">Every dusk one shinobi carries the village flame to the top of the pagoda. Tonight two strangers in grey cloaks got there first.</p>
+      <p class="lede">A fox in a dream sent you north to find the sixth element. Tonight the road brings you home, and by old custom the graduate who returns carries the village flame.</p>
     </header>
     <div class="pick">
       <p class="pick-label">Choose your Lamplighter</p>
       <div class="heroes" id="heroes"></div>
       <div class="go-row">
         <button type="button" id="start">Enter the village</button>
-        <p class="hint" id="title-hint">Roam the rooftops, eat ramen, then answer the knock at the pagoda.</p>
+        <p class="hint" id="title-hint">Remember the dream, eat ramen, answer the knock at the pagoda, then stay for the bonfire, the inn and a morning at your old academy. Press <kbd>V</kbd> to weave hand signs into jutsu, with your real hands on camera (<kbd>B</kbd>) or the sign pad.</p>
       </div>
     </div>
   </section>

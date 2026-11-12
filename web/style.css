@@ -145,3 +145,86 @@ small { font-size: 0.72em; letter-spacing: 0.08em; text-transform: uppercase; co
   .title-side { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .dmg, #card, #callout, #dialog .next { animation-duration: 0.01s; } }
+
+/* Sign Weaving (v2): slow-motion focus, the jutsu scroll, the sign pad and the camera view */
+.eyebrow b { color: var(--paper); border: 1px solid var(--ember); padding: 1px 7px; margin-left: 8px; white-space: nowrap; }
+.hint b { color: var(--ember); }
+#view { transition: filter 0.25s; }
+.weaving #view { filter: saturate(0.55) brightness(0.72) contrast(1.08); }
+.weaving #vignette { box-shadow: inset 0 0 220px 30px rgba(10, 6, 24, 0.85); }
+.eye #vignette { box-shadow: inset 0 0 170px 24px rgba(255, 40, 40, 0.42); }
+.weaving .keys, .weaving .map { opacity: 0; }
+#sign-pill { border-color: var(--ki); }
+#weave-video { position: absolute; width: 2px; height: 2px; opacity: 0; pointer-events: none; }
+#weave { position: absolute; top: 12px; bottom: 12px; right: var(--gut-r); width: min(318px, calc(100% - 32px)); z-index: 13; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; background: rgba(14, 11, 22, 0.86); border-top: 4px solid var(--ember); backdrop-filter: blur(8px); overflow-y: auto; animation: weave-in 0.22s cubic-bezier(0.2, 0.9, 0.2, 1); -webkit-user-select: none; user-select: none; }
+@keyframes weave-in { from { opacity: 0; transform: translateX(26px); } }
+.w-head { display: flex; justify-content: space-between; align-items: center; font-family: var(--display); font-size: 18px; letter-spacing: 0.08em; color: var(--ember); }
+#weave-close { all: unset; cursor: pointer; font-family: var(--body); font-size: 12px; font-weight: 700; color: var(--paper-dim); letter-spacing: 0; }
+#weave-close:focus-visible, #weave-cam:focus-visible, #weave-pad button:focus-visible { outline: 2px solid var(--paper); outline-offset: 2px; }
+.w-timer { height: 3px; background: rgba(246, 236, 217, 0.15); flex: none; }
+.w-timer i { display: block; height: 100%; background: var(--ember); transform-origin: left; transform: scaleX(var(--left, 1)); }
+#weave-pip { position: relative; flex: none; border: 2px solid var(--ink); box-shadow: 0 0 0 1px rgba(246, 236, 217, 0.35); }
+#weave-pip canvas { display: block; width: 100%; height: auto; }
+#weave-pip::after { content: ""; position: absolute; left: 0; bottom: 0; height: 4px; width: 100%; background: #ffd060; transform-origin: left; transform: scaleX(var(--hold, 0)); }
+#weave-status { margin: 0; font-weight: 700; font-size: 13px; color: var(--paper); min-height: 1.3em; }
+#weave-note { margin: 0; font-size: 12px; color: var(--danger); min-height: 1.3em; }
+#weave-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
+#weave-list li { --c: var(--ember); display: grid; grid-template-columns: 1fr auto; column-gap: 8px; align-items: center; padding: 5px 8px; background: rgba(246, 236, 217, 0.06); border-left: 3px solid var(--c); transition: opacity 0.15s; }
+#weave-list li.out { opacity: 0.22; }
+#weave-list li.poor .w-name i { color: var(--danger); }
+.w-name { display: flex; flex-wrap: wrap; gap: 0 8px; align-items: baseline; min-width: 0; }
+.w-name b { font-family: var(--display); font-weight: 400; font-size: 14px; color: var(--c); white-space: nowrap; }
+.w-name i { font-style: normal; font-size: 11px; font-weight: 700; color: var(--paper-dim); white-space: nowrap; }
+#weave-list p { grid-column: 1; margin: 0; font-size: 11px; line-height: 1.25; color: var(--paper-dim); }
+.w-seq { grid-column: 2; grid-row: 1 / span 2; display: flex; gap: 3px; align-items: center; }
+.w-seq span { display: grid; place-items: center; height: 30px; padding: 0 3px; border-bottom: 2px solid transparent; }
+.w-seq svg { height: 24px; width: auto; fill: var(--paper-dim); }
+.w-seq span.done svg { fill: var(--c); }
+.w-seq span.next { border-bottom-color: var(--paper); }
+.w-seq span.next svg { fill: var(--paper); }
+#weave-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; flex: none; }
+#weave-pad button { all: unset; box-sizing: border-box; cursor: pointer; position: relative; display: grid; justify-items: center; gap: 1px; padding: 6px 2px 4px; background: rgba(246, 236, 217, 0.08); border: 1px solid rgba(246, 236, 217, 0.18); font-size: 11px; font-weight: 700; color: var(--paper-dim); opacity: 0.5; }
+#weave-pad button.want { opacity: 1; color: var(--paper); border-color: var(--ember); }
+#weave-pad button:active { background: var(--ember); }
+#weave-pad svg { height: 30px; width: auto; fill: currentColor; }
+#weave-pad kbd { position: absolute; left: 3px; top: 3px; font-size: 10px; padding: 0 4px; }
+#weave-cam { all: unset; box-sizing: border-box; cursor: pointer; text-align: center; font-weight: 700; font-size: 13px; padding: 8px 10px; background: var(--ink); border: 1px solid var(--ki); color: var(--ki); flex: none; }
+.pad [data-act="weave"] { right: 72px; bottom: 142px; border-color: var(--ember); }
+@media (max-width: 720px) {
+  #weave { top: auto; left: var(--gut-l); width: auto; max-height: 72%; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+  #weave-list p { display: none; }
+  #weave-pip { width: 46%; align-self: center; }
+}
+@media (prefers-reduced-motion: reduce) { #weave { animation: none; } #view { transition: none; } }
+
+/* ------------------------------------------------------------ v3: dream, choices, coins, elements */
+#fade.white { background: #fff; }
+#dialog.ask { cursor: default; }
+#dialog.ask .next { display: none; }
+#choices { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+#choices:empty { display: none; }
+#choices button { all: unset; box-sizing: border-box; cursor: pointer; padding: 8px 14px; font-weight: 700; font-size: 15px; background: var(--ink); border: 1px solid var(--ember); color: var(--paper); }
+#choices button:hover, #choices button:focus-visible { background: var(--ember); color: var(--ink); }
+#coins { display: inline-flex; align-items: center; gap: 5px; border-color: #6fbf5a; }
+#coins svg { width: 15px; height: 12px; fill: #6fbf5a; }
+#coins em { font-style: normal; }
+#wallet { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); z-index: 13; display: grid; justify-items: center; gap: 6px; padding: 16px 26px 14px; background: var(--ink-soft); border-top: 4px solid #6fbf5a; backdrop-filter: blur(6px); animation: purse 0.35s cubic-bezier(0.2, 1.4, 0.3, 1); }
+@keyframes purse { from { opacity: 0; transform: translate(-50%, -40%) scale(0.7); } }
+#wallet svg { width: min(170px, 38vw); height: auto; }
+#wallet .f-body { fill: #5fae4c; stroke: #15121a; stroke-width: 5; }
+#wallet .f-belly { fill: #cfe8a8; }
+#wallet .f-eye { fill: #fffaf2; stroke: #15121a; stroke-width: 4; }
+#wallet .f-pupil { fill: #15121a; }
+#wallet .f-mouth { fill: none; stroke: #15121a; stroke-width: 6; stroke-linecap: round; }
+#wallet .f-clasp { fill: #e0b040; stroke: #15121a; stroke-width: 4; }
+#wallet .f-cheek { fill: rgba(255, 130, 130, 0.5); }
+#wallet p { margin: 0; font-weight: 700; font-size: 16px; }
+#wallet p b { font-family: var(--display); font-size: 30px; font-weight: 400; color: #e0a060; margin-right: 4px; }
+.w-coins { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; min-height: 16px; max-width: 150px; }
+.w-coins i { width: 14px; height: 14px; border-radius: 50%; background: #c8773c; box-shadow: inset 0 0 0 2px #8a4a20; }
+.hero .born { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--paper-dim); }
+.hero .born u { text-decoration: none; }
+.w-name u { text-decoration: none; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+#weave-list li.sealed { opacity: 0.4; border-left-style: dashed; }
+#weave-list li.sealed .w-seq { filter: blur(3px); }
+@media (prefers-reduced-motion: reduce) { #wallet { animation-duration: 0.01s; } }

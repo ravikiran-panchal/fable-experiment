@@ -9,6 +9,8 @@
 | esbuild | npm `esbuild` | MIT | Build tool only, not shipped | None |
 | Dela Gothic One, Zen Maru Gothic | Google Fonts (loaded online, system fallback offline) | SIL OFL 1.1 | Titles and HUD text | None |
 
+| MediaPipe Tasks Vision 1.2.2 (`vendor/mediapipe/vision_bundle.mjs`, `wasm/`) | npm `@mediapipe/tasks-vision` (Google) | Apache 2.0 | Hand tracking for Sign Weaving, loaded only when the camera is on | None. Keep this row as the notice |
+| `vendor/mediapipe/hand_landmarker.task` | `storage.googleapis.com/mediapipe-models/...` (Google) | Apache 2.0 | Hand tracking model | None |
 | `cover.jpg` | Screenshot of the game's own title screen | Yours | Link preview image | None |
 
 ## Audio (CC0 / public domain only)
@@ -35,3 +37,51 @@ report for the audio. The ramen slot uses chopstick and bowl sounds because no C
 | `sfx_ui.mp3` | Dialogue advance |
 | `sfx_firework.mp3` | Finale |
 | `sfx_victory.mp3` | Duel won |
+
+## Sign Weaving audio (added in v2)
+
+These eight files were copied from the Hand Sign Jutsu project (`hand-sign-jutsu/assets/audio/`), where they
+were cut and levelled from the CC0 sources below. `npm run audio:fetch` does not make them and does not list
+them in `assets/audio/SOURCES.md`, so this table is their licensing record. Nothing is synthesized.
+
+| File | Asset | Source | Licence | Where used | Your action |
+| --- | --- | --- | --- | --- | --- |
+| `sfx_sign.mp3` | [Interface Sounds / confirmation_001.ogg](https://kenney.nl/assets/interface-sounds) by Kenney | Kenney.nl | CC0 1.0 | Each sign locked in | None (public domain) |
+| `sfx_cast.mp3` | [Swishes Sound Pack / swish-7.wav](https://opengameart.org/content/swishes-sound-pack) by artisticdude | OpenGameArt | CC0 1.0 | Any jutsu cast | None (public domain) |
+| `sfx_j_comet.mp3` | [Magic Spell SFX / magical_1_0.ogg](https://opengameart.org/content/magic-spell-sfx) by JaggedStone | OpenGameArt | CC0 1.0 | Ember Comet | None (public domain) |
+| `sfx_j_storm.mp3` | [Interface Sounds / glitch_002.ogg](https://kenney.nl/assets/interface-sounds) by Kenney | Kenney.nl | CC0 1.0 | Storm Thread (stand-in: not a real electric crackle) | None, or replace with a better CC0 file |
+| `sfx_j_eye.mp3` | [100 CC0 SFX / gong_02.ogg](https://opengameart.org/content/100-cc0-sfx) by rubberduck | OpenGameArt | CC0 1.0 | Lantern Eye | None (public domain) |
+| `sfx_j_ward.mp3` | [80 CC0 RPG SFX / stones_03.ogg](https://opengameart.org/content/80-cc0-rpg-sfx) by rubberduck | OpenGameArt | CC0 1.0 | Dune Ward cast and each blocked hit (stand-in: stones, not sand) | None, or replace with a better CC0 file |
+| `sfx_j_panda.mp3` | [100 CC0 SFX / gong_01.ogg](https://opengameart.org/content/100-cc0-sfx) by rubberduck | OpenGameArt | CC0 1.0 | Bamboo Guardian | None (public domain) |
+| `sfx_j_breath.mp3` | [80 CC0 RPG SFX / spell_fire_03.ogg](https://opengameart.org/content/80-cc0-rpg-sfx) by rubberduck | OpenGameArt | CC0 1.0 | Hearth Breath | None (public domain) |
+
+## v3 (Chapter One)
+
+Everything visual in v3 is drawn by code. The v3 sounds below were cut from CC0 packs that were already
+downloaded for v1 (they sit in `assets/audio/_src/`), so nothing new was downloaded. Each one is listed with
+its source in `assets/audio/SOURCES.md`, which the audio script rewrites.
+
+| File | Where used | Note |
+| --- | --- | --- |
+| `music_festival.mp3` | Bonfire | Tyhosiasian by Tozan. A Japanese town tune, not a taiko band: no CC0 taiko loop was found |
+| `sfx_jump.mp3` | Jump | Changed from a soft cloth rustle to a swish, and made louder |
+| `sfx_coins.mp3` | Inn, job pay, ramen | |
+| `sfx_splash.mp3` | Bath | |
+| `sfx_door.mp3` | Bed, training ground | |
+| `sfx_paper.mp3` | Job board | |
+| `sfx_pickup.mp3` | Job pick-ups and deliveries | |
+| `sfx_job_done.mp3`, `sfx_job_fail.mp3` | Job result | |
+| `sfx_j_tide.mp3` | Tide Mend | |
+| `sfx_j_melt.mp3` | Mirror Melt | Stand-in: a generic spell, not a liquid sound |
+| `sfx_j_unmake.mp3` | Dust Verdict | |
+| `sfx_eye_cut.mp3` | Lantern Eye close-up | |
+
+### Downloaded on 12 Nov 2026 (approved)
+
+| File | Source | Size | Licence | Became | Your action |
+| --- | --- | --- | --- | --- | --- |
+| `Heavenly Loop.ogg` by isaiah658 | https://opengameart.org/content/heavenly-loop | 1.2 MB | CC0 | `music_dream.mp3`, the fox dream | None (public domain) |
+| `fire.wav` by PagDev | https://opengameart.org/content/fireplace-sound-loop | 9.8 MB | CC0 | `amb_fire.mp3`, the bonfire crackle | None (public domain) |
+
+Still silent with no source found: a real taiko, shamisen and shakuhachi recording for the bonfire band. The
+only taiko loop found on OpenGameArt is CC-BY 3.0, which this public repo does not use.

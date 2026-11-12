@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { clamp } from './util.js';
 import { POI } from './world.js';
+import { ELEMENTS, AFFINITY } from './jutsu-list.js';
 
 const $ = (s) => document.querySelector(s);
 const hex = (c) => '#' + new THREE.Color(c).getHexString();
@@ -15,6 +16,7 @@ export class UI {
       foes: $('#foes'), foe: [$('#foe0'), $('#foe1')], objective: $('#objective'), prompt: $('#prompt'), dialog: $('#dialog'),
       card: $('#card'), callout: $('#callout'), toast: $('#toast'), fade: $('#fade'), dmg: $('#dmg'), vignette: $('#vignette'),
       title: $('#title'), heroes: $('#heroes'), start: $('#start'), map: $('#minimap'), tInteract: $('#t-interact'),
+      view: $('#view'), choices: $('#choices'), coins: $('#coins'), wallet: $('#wallet'),
     };
     this.dialogState = null; this.toastT = 0; this.cardT = 0; this.calloutT = 0;
     this.el.dialog.addEventListener('click', () => this.advance());
@@ -30,7 +32,7 @@ export class UI {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'hero'; b.id = 'hero-' + h.id; b.style.setProperty('--c', hex(h.color));
       const pips = (n) => Array.from({ length: 5 }, (_, k) => `<u class="${k < n ? 'on' : ''}"></u>`).join('');
-      b.innerHTML = `<b>${h.name}</b><i>${h.title}</i><p>${h.blurb}</p><dl><dt>Power</dt><dd>${pips(h.stats.power)}</dd><dt>Speed</dt><dd>${pips(h.stats.speed)}</dd><dt>Reach</dt><dd>${pips(h.stats.reach)}</dd></dl><em>${h.special}</em>`;
+      b.innerHTML = `<b>${h.name}</b><i>${h.title}</i><p>${h.blurb}</p><dl><dt>Power</dt><dd>${pips(h.stats.power)}</dd><dt>Speed</dt><dd>${pips(h.stats.speed)}</dd><dt>Reach</dt><dd>${pips(h.stats.reach)}</dd></dl><em>${h.special}</em><span class="born">Born of ${(AFFINITY[h.id] || []).map((e) => `<u style="color:${hex(ELEMENTS[e].color)}">${ELEMENTS[e].name}</u>`).join(' and ')}</span>`;
       b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
       b.addEventListener('click', () => { this.pick(i); onPick(i); });
       this.el.heroes.appendChild(b);
@@ -68,7 +70,18 @@ export class UI {
   cine(on) { this.app.classList.toggle('cine', on); }
   hudHidden(on) { this.app.classList.toggle('nohud', on); }
   hurt() { const v = this.el.vignette; v.classList.remove('hurt'); void v.offsetWidth; v.classList.add('hurt'); }
-  fade(on) { this.el.fade.classList.toggle('on', on); return this.G.wait(0.55); }
+  fade(on, white = false) { if (on) this.el.fade.classList.toggle('white', white); this.el.fade.classList.toggle('on', on); return this.G.wait(0.55); }
+  // Soft focus for the dream: blur the picture to `px` over `secs` seconds (0 px puts it back).
+  blur(px, secs = 1) { const v = this.el.view; v.style.transition = `filter ${secs}s ease-in-out`; v.style.filter = px > 0 ? `blur(${px}px)` : ''; if (!px) setTimeout(() => { if (!v.style.filter) v.style.transition = ''; }, secs * 1000 + 50); }
+
+  // ---- coins and the frog purse ----
+  coins(n) { this.el.coins.hidden = false; this.el.coins.lastElementChild.textContent = `${n} copper`; }
+  wallet(n, from = n) { // opens the purse in the middle of the screen; counts down from `from` to `n`
+    const w = this.el.wallet, out = w.querySelector('b'), row = w.querySelector('.w-coins');
+    w.hidden = false; this.walletAnim = { from, to: n, t: 0, out, row };
+    out.textContent = from; row.innerHTML = '<i></i>'.repeat(Math.min(12, from));
+  }
+  walletClose() { this.el.wallet.hidden = true; this.walletAnim = null; }
 
   toast(t, dur = 2.2) { this.el.toast.textContent = t; this.el.toast.hidden = false; this.toastT = dur; }
   card(title, sub = '', dur = 3) {
@@ -76,9 +89,9 @@ export class UI {
     c.querySelector('h2').textContent = title; c.querySelector('.card-sub').textContent = sub;
     c.hidden = true; void c.offsetWidth; c.hidden = false; this.cardT = dur;
   }
-  callout(t, foe = false) {
+  callout(t, foe = false, color = null) {
     const c = this.el.callout;
-    c.textContent = t + '!'; c.classList.toggle('foe', foe);
+    c.textContent = t + '!'; c.classList.toggle('foe', foe); c.style.color = color === null ? '' : hex(color);
     c.hidden = true; void c.offsetWidth; c.hidden = false; this.calloutT = 1.1;
   }
 
@@ -105,6 +118,23 @@ export class UI {
       this.dialogState.line.textContent = '';
     });
   }
+  // A question with buttons. Resolves with the index of the choice (keys 1, 2, ... also work).
+  choose(who, text, options, color) {
+    return new Promise((resolve) => {
+      const d = this.el.dialog, box = this.el.choices;
+      d.hidden = false; d.classList.add('ask');
+      d.style.borderLeftColor = color ? hex(color) : '';
+      const wh = d.querySelector('.who'); wh.textContent = who || ''; wh.style.color = color ? hex(color) : '';
+      d.querySelector('.line').textContent = text;
+      const done = (i) => { removeEventListener('keydown', key); box.innerHTML = ''; d.classList.remove('ask'); d.hidden = true; this.asking = false; this.G.audio.play('ui'); resolve(i); };
+      const key = (e) => { const n = /^Digit[1-9]$/.test(e.code) ? Number(e.code.slice(5)) - 1 : -1; if (n >= 0 && n < options.length) { e.preventDefault(); done(n); } };
+      box.innerHTML = '';
+      options.forEach((o, i) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `<kbd>${i + 1}</kbd> ${o}`; b.addEventListener('click', (e) => { e.stopPropagation(); done(i); }); box.appendChild(b); });
+      this.asking = true; this.G.input.releasePointer();
+      if (this.G.auto) this.G.wait(0.5).then(() => { if (this.asking) done(this.G.autoPick || 0); });
+      addEventListener('keydown', key);
+    });
+  }
   advance() {
     const s = this.dialogState;
     if (!s || s.hold > 0) return;
@@ -119,7 +149,13 @@ export class UI {
     if (s) {
       s.hold -= dt;
       if (s.n < s.text.length) { s.n = Math.min(s.text.length, s.n + dt * 46); s.line.textContent = s.text.slice(0, Math.floor(s.n)); }
-      if (input.hit('interact') || input.hit('jump') || input.hit('attack')) this.advance();
+      if (input.hit('interact') || input.hit('jump') || input.hit('attack') || (this.G.auto && s.n >= s.text.length && s.hold < -0.4)) this.advance();
+    }
+    const wa = this.walletAnim;
+    if (wa && wa.from !== wa.to) { // coins leave the purse one by one
+      wa.t += dt;
+      const n = Math.max(wa.to, wa.from - Math.floor(Math.max(0, wa.t - 0.6) / 0.16));
+      if (String(n) !== wa.out.textContent) { wa.out.textContent = n; wa.row.innerHTML = '<i></i>'.repeat(n); this.G.audio.play('ui'); }
     }
     if (this.toastT > 0 && (this.toastT -= dt) <= 0) this.el.toast.hidden = true;
     if (this.cardT > 0 && (this.cardT -= dt) <= 0) this.el.card.hidden = true;
@@ -135,7 +171,7 @@ export class UI {
     g.fillStyle = '#58b4d8'; g.fillRect(0, P(17), S, P(27) - P(17));
     g.beginPath(); g.arc(P(POI.pond.x), P(POI.pond.z), 12.5 * 1.5, 0, 7); g.fill();
     for (const c of world.colliders) {
-      if (c.kind === 'cliff' || c.kind === 'gate' || c.kind === 'ramen' || c.kind === 'counter') continue;
+      if (c.kind === 'cliff' || c.kind === 'gate' || c.kind === 'ramen' || c.kind === 'counter' || c.kind === 'inner') continue;
       g.fillStyle = hex(c.color);
       g.fillRect(P(c.minX - c.ov), P(c.minZ - c.ov), (c.maxX - c.minX + c.ov * 2) * 1.5, (c.maxZ - c.minZ + c.ov * 2) * 1.5);
     }

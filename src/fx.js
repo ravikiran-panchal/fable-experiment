@@ -225,6 +225,7 @@ export class FX {
 
   // ---- ambient atmosphere ----
   ambient(dt, focus, env, world, state) {
+    if (state.dream) return; // the dream has its own air
     const night = clamp(env.cur.stars * 1.2, 0, 1), omen = state.omen;
     // blossom petals drift across the whole village
     this._pet = (this._pet || 0) + dt * (omen ? 6 : 26);

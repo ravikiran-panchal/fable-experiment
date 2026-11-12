@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { Batch, GEO, PRISM, RAMP, toon, makeRng, clamp, TAU } from './util.js';
+import { etherPatch } from './ether.js';
+import { buildTown, TOWN_LOTS, FIRE_GAP } from './town.js';
 
 // Kagaribi Village. North is -Z. Everything here is generated from code: no model files.
 export const POI = {
@@ -27,6 +29,7 @@ export class World {
     this.dummies = [];     // training posts you can hit
     this.steam = [];       // points that emit steam / smoke
     this.fireflies = [];
+    this.craters = [];     // holes left by Dust Verdict: { x, z, r, d }
     this.B = new Batch();        // lit, shadow-casting geometry
     this.GL = new Batch();       // glowing windows
     this.LN = new Batch();       // glowing lanterns
@@ -46,12 +49,13 @@ export class World {
     this._houses();
     this._streetLanterns();
     this._nature();
+    buildTown(this, POI);
     this._backdrop();
 
-    const solid = this.B.build(new THREE.MeshToonMaterial({ vertexColors: true, gradientMap: RAMP }));
+    const solid = this.B.build(etherPatch(new THREE.MeshToonMaterial({ vertexColors: true, gradientMap: RAMP })));
     solid.castShadow = true; solid.receiveShadow = true;
-    this.windowMat = new THREE.MeshBasicMaterial({ vertexColors: true });
-    this.lanternMat = new THREE.MeshBasicMaterial({ vertexColors: true });
+    this.windowMat = etherPatch(new THREE.MeshBasicMaterial({ vertexColors: true }));
+    this.lanternMat = etherPatch(new THREE.MeshBasicMaterial({ vertexColors: true }));
     this.group.add(solid, this.GL.build(this.windowMat), this.LN.build(this.lanternMat));
   }
 
@@ -99,6 +103,10 @@ export class World {
     }
     pos.x = clamp(pos.x, -97.5, 97.5);
     pos.z = clamp(pos.z, -93, 97.5);
+    if (support === 0) for (const c of this.craters) { // step down into a crater
+      const d = Math.hypot(pos.x - c.x, pos.z - c.z) / c.r;
+      if (d < 1) support = Math.min(support, -c.d * (1 - d * d));
+    }
     return support;
   }
 
@@ -110,6 +118,13 @@ export class World {
       if (y > c.y0 - 0.2 && y < this.topAt(c, x, z) + 0.3) return true;
     }
     return false;
+  }
+
+  // Builds into throwaway batches so the random numbers are still used up but nothing appears.
+  // This keeps every other house exactly where it was when a lot is cleared for a new building.
+  _dry(on, keep) {
+    if (on) { const k = { B: this.B, GL: this.GL, LN: this.LN, nc: this.colliders.length, np: this.posts.length }; this.B = new Batch(); this.GL = new Batch(); this.LN = new Batch(); return k; }
+    this.B = keep.B; this.GL = keep.GL; this.LN = keep.LN; this.colliders.length = keep.nc; this.posts.length = keep.np;
   }
 
   // ---------- little builders ----------
@@ -284,9 +299,9 @@ export class World {
 
     const tex = new THREE.CanvasTexture(cv);
     tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
-    const inner = new THREE.Mesh(new THREE.PlaneGeometry(256, 256).rotateX(-Math.PI / 2), new THREE.MeshToonMaterial({ map: tex, gradientMap: RAMP }));
+    const inner = new THREE.Mesh(new THREE.PlaneGeometry(256, 256).rotateX(-Math.PI / 2), etherPatch(new THREE.MeshToonMaterial({ map: tex, gradientMap: RAMP }), { ground: true }));
     inner.receiveShadow = true;
-    const outer = new THREE.Mesh(new THREE.PlaneGeometry(2400, 2400).rotateX(-Math.PI / 2), new THREE.MeshToonMaterial({ color: 0x7fae58, gradientMap: RAMP }));
+    const outer = new THREE.Mesh(new THREE.PlaneGeometry(2400, 2400).rotateX(-Math.PI / 2), etherPatch(new THREE.MeshToonMaterial({ color: 0x7fae58, gradientMap: RAMP }), { ground: true }));
     outer.position.y = -0.05;
     this.group.add(inner, outer);
     this.groundCanvas = cv;
@@ -593,7 +608,11 @@ export class World {
     for (const [bx0, bx1] of blockX) for (const [bz0, bz1] of blockZ) {
       const depth = bz1 - bz0;
       if (depth < 7) { // river bank strips: blossom trees and benches
-        for (let x = bx0 + 3; x < bx1 - 2; x += 7 + r() * 4) this.tree('cherry', x, (bz0 + bz1) / 2 + (r() - 0.5) * 2, 0.9 + r() * 0.4);
+        for (let x = bx0 + 3; x < bx1 - 2; x += 7 + r() * 4) {
+          const keep = bz0 === 30.5 && bx0 === 6.5 && x > FIRE_GAP[0] && x < FIRE_GAP[1] ? this._dry(true) : null; // room for the bonfire
+          this.tree('cherry', x, (bz0 + bz1) / 2 + (r() - 0.5) * 2, 0.9 + r() * 0.4);
+          if (keep) this._dry(false, keep);
+        }
         continue;
       }
       const rows = depth >= 17 ? 2 : 1, rd = depth / rows;
@@ -605,8 +624,10 @@ export class World {
           const cx = x + w / 2, cz = zc + (r() - 0.5) * 0.8;
           const face = rows === 2 ? (row === 0 ? 'n' : 's') : (r.chance(0.5) ? 'n' : 's');
           if (!reserved(cx - w / 2 - 0.5, cx + w / 2 + 0.5, cz - d / 2 - 0.5, cz + d / 2 + 0.5)) {
+            const keep = TOWN_LOTS.some(([a0, a1, b0, b1]) => cx - w / 2 - 0.5 < a1 && cx + w / 2 + 0.5 > a0 && cz - d / 2 - 0.5 < b1 && cz + d / 2 + 0.5 > b0) ? this._dry(true) : null;
             if (r.chance(0.1)) { this.tree(r.pick(['round', 'cherry', 'bamboo']), cx, cz, 1.1); this.stoneLantern(cx + 2.5, cz + 1.5); }
             else this.house(cx, cz, w, d, face);
+            if (keep) this._dry(false, keep);
           }
           x += w + 1.4 + r() * 2.2;
         }

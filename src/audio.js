@@ -6,7 +6,7 @@ export const SLOTS = {
   amb_village: { file: 'amb_village', loop: true, vol: 0.3 },
   hit: { file: 'sfx_hit', vol: 0.8 },
   slash: { file: 'sfx_whoosh', vol: 0.55 },
-  jump: { file: 'sfx_jump', vol: 0.45 },
+  jump: { file: 'sfx_jump', vol: 0.75 }, // was a soft cloth rustle at 0.45 and got lost under the music
   dash: { file: 'sfx_dash', vol: 0.55 },
   special: { file: 'sfx_special', vol: 0.9 },
   hurt: { file: 'sfx_hurt', vol: 0.8 },
@@ -15,6 +15,31 @@ export const SLOTS = {
   ui: { file: 'sfx_ui', vol: 0.45 },
   firework: { file: 'sfx_firework', vol: 0.7 },
   victory: { file: 'sfx_victory', vol: 0.45 }, // a full fanfare now, so sits at music level
+  // Sign Weaving (CC0 files shared with the Hand Sign Jutsu project)
+  sign: { file: 'sfx_sign', vol: 0.6 },
+  cast: { file: 'sfx_cast', vol: 0.7 },
+  j_comet: { file: 'sfx_j_comet', vol: 0.8 },
+  j_storm: { file: 'sfx_j_storm', vol: 0.8 },
+  j_eye: { file: 'sfx_j_eye', vol: 0.5 },
+  j_ward: { file: 'sfx_j_ward', vol: 0.7 },
+  j_panda: { file: 'sfx_j_panda', vol: 0.5 },
+  j_breath: { file: 'sfx_j_breath', vol: 0.8 },
+  // v3: chapter one
+  music_festival: { file: 'music_festival', loop: true, vol: 0.24 },
+  coins: { file: 'sfx_coins', vol: 0.7 },
+  splash: { file: 'sfx_splash', vol: 0.6 },
+  door: { file: 'sfx_door', vol: 0.6 },
+  paper: { file: 'sfx_paper', vol: 0.6 },
+  pickup: { file: 'sfx_pickup', vol: 0.6 },
+  job_done: { file: 'sfx_job_done', vol: 0.6 },
+  job_fail: { file: 'sfx_job_fail', vol: 0.5 },
+  j_tide: { file: 'sfx_j_tide', vol: 0.7 },
+  j_melt: { file: 'sfx_j_melt', vol: 0.8 },
+  j_unmake: { file: 'sfx_j_unmake', vol: 0.8 },
+  eye_cut: { file: 'sfx_eye_cut', vol: 0.5 },
+  // wanted, no file yet (silent until one is added): see ASSETS.md
+  music_dream: { file: 'music_dream', loop: true, vol: 0.25 },
+  amb_fire: { file: 'amb_fire', loop: true, vol: 0.4 },
 };
 const PREFER = ['mp3', 'm4a', 'ogg', 'wav'];
 const VOICES = 4; // how many copies of one effect can overlap

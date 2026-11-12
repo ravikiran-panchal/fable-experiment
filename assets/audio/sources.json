@@ -12,5 +12,19 @@
   "sfx_bell": 0,
   "sfx_ui": 0,
   "sfx_firework": 0,
-  "sfx_victory": 0
+  "sfx_victory": 0,
+  "music_festival": 0,
+  "sfx_coins": 0,
+  "sfx_splash": 0,
+  "sfx_door": 0,
+  "sfx_paper": 0,
+  "sfx_pickup": 0,
+  "sfx_job_done": 0,
+  "sfx_job_fail": 0,
+  "sfx_j_tide": 0,
+  "sfx_j_melt": 0,
+  "sfx_j_unmake": 0,
+  "sfx_eye_cut": 0,
+  "music_dream": 0,
+  "amb_fire": 0
 }
