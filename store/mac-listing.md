@@ -2,7 +2,7 @@
 
 | Box | Text |
 | --- | --- |
-| Name (30 max) | Will of Fire: The Last Ember |
+| Name (30 max) | Hidden Ember |
 | Subtitle (30 max) | Ninja village, real hand signs |
 | Primary category | Games > Action |
 | Secondary category | Games > Adventure |

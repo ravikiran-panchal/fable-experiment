@@ -1,6 +1,6 @@
-# Will of Fire: The Last Ember
+# Hidden Ember
 
-(Working title until November 2026: Hidden Ember.)
+(Briefly renamed "Will of Fire: The Last Ember" on 12 Nov 2026, then renamed back to Hidden Ember the same day to keep clear of anime-franchise IP.)
 
 A playable 3D anime-style ninja village that runs in a browser tab. Every building, character,
 animation, effect and cutscene is generated from code. There are no model files, no textures
@@ -14,6 +14,14 @@ Built in one session with Claude (Fable 5.2) inside Claude Code.
 - **Offline:** double-click `play.html`. That is the whole install, on Windows and macOS.
 
 Chrome or Edge gives the best frame rate. It also runs on Android Chrome with touch controls.
+
+## Also in this repo: Hand Sign Jutsu (`hand-sign-jutsu/`)
+
+The standalone webcam hand-sign website that Sign Weaving grew out of. Merged in from its own repo on
+12 Nov 2026 with full history; that repo is retired.
+
+- **Online:** https://ravikiran-panchal.github.io/fable-experiment/hand-sign-jutsu/ (same Pages site as the game)
+- **Locally:** `cd hand-sign-jutsu && npm start`, then http://localhost:8766. See `hand-sign-jutsu/README.md`.
 
 ## What is in it
 
@@ -183,7 +191,7 @@ npm run build
 ```
 
 `npm run build` rewrites `play.html`, `index.html` (the same file, for the public link) and
-`dist/will-of-fire.artifact.html` (the silent copy used for the Claude artifact link). Source lives in `src/`:
+`dist/hidden-ember.artifact.html` (the silent copy used for the Claude artifact link). Source lives in `src/`:
 
 | File | What it holds |
 | --- | --- |

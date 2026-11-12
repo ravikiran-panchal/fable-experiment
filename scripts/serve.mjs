@@ -10,4 +10,4 @@ createServer(async (req, res) => {
   if (!p.startsWith(root)) { res.writeHead(403).end(); return; }
   try { const b = await readFile(p.endsWith(path.sep) ? path.join(p, 'index.html') : p); res.writeHead(200, { 'Content-Type': types[path.extname(p)] || 'application/octet-stream' }).end(b); }
   catch { res.writeHead(404).end('not found'); }
-}).listen(8765, () => console.log('Will of Fire on http://localhost:8765/play.html'));
+}).listen(8765, () => console.log('Hidden Ember on http://localhost:8765/play.html'));

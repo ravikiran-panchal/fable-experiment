@@ -1,6 +1,7 @@
 // THE NAMES FILE.
 // Every label a visitor reads lives here: app title, jutsu names, sign names, hints.
-// The jutsu names are deliberate sound-alikes, not the originals. Change a label here and it changes everywhere.
+// Windball, Lightning Burst and Eyes of the Mystic are original names (12 Nov 2026). The other three are still
+// sound-alikes waiting on Ravi's replacements. Change a label here and it changes everywhere.
 // The keys (sphere, lightning, ...) are internal ids used by the code: do not rename those.
 
 export const APP = {
@@ -10,17 +11,17 @@ export const APP = {
 
 export const JUTSU = {
   sphere: {
-    label: 'Rensengon',
+    label: 'Windball',
     sub: 'Spiral energy sphere',
     tip: 'Hold your open palm up. Close your fist to compress it, open to burst.',
   },
   lightning: {
-    label: 'Chidoree',
+    label: 'Lightning Burst',
     sub: 'Lightning blade',
     tip: 'Move your hand fast to slash. The lightning follows your fingers.',
   },
   eye: {
-    label: 'Sharingon',
+    label: 'Eyes of the Mystic',
     sub: 'Eye awakening',
     tip: 'Look straight into the camera, face well lit.',
   },

@@ -1,6 +1,6 @@
 {
   "appId": "io.github.ravikiranpanchal.willoffire",
-  "appName": "Will of Fire",
+  "appName": "Hidden Ember",
   "webDir": "app/www",
   "android": { "backgroundColor": "#0e0b16" }
 }

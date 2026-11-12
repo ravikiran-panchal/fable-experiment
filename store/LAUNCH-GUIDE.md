@@ -1,4 +1,4 @@
-# Launch guide: Will of Fire: The Last Ember
+# Launch guide: Hidden Ember
 
 Written so anyone can follow it. Do one step, tick it, do the next. Stuck on a step? Tell Claude the step number.
 
@@ -34,7 +34,7 @@ Time: about 3 to 4 weeks, mostly waiting. Cost: 25 US dollars, paid once.
 14. Google asks for a photo of your ID. Send it. Wait for the email that says you are verified.
 
 ### A4. Make the shop page (30 minutes)
-15. In Play Console click **Create app**. Name: `Will of Fire: The Last Ember`. Choose **Game** and **Free**.
+15. In Play Console click **Create app**. Name: `Hidden Ember`. Choose **Game** and **Free**.
 16. Open the file `store/listing.md`. Copy the short description and the full description into the boxes.
 17. Upload the pictures from the folder `store/graphics`: `play-icon-512.png`, `feature-graphic-1024x500.png`, and the `phone-...png` screenshots (or your own from step 10).
 18. Privacy policy box: paste `https://ravikiran-panchal.github.io/fable-experiment/privacy.html`
@@ -79,8 +79,8 @@ A certificate is Apple's way of knowing the app really came from you.
 
 ### B3. Tell Apple about your app (10 minutes)
 10. On the same website click **Identifiers**, then **+**. Choose **App IDs**, then **App**.
-11. Description: `Will of Fire`. Bundle ID: choose **Explicit** and type `io.github.ravikiranpanchal.willoffire`. Click Register.
-12. Click **Profiles**, then **+**. Choose **Mac App Store Connect**. Pick the App ID from step 11, then the certificate from step 8. Name it `Will of Fire MAS`. Download it.
+11. Description: `Hidden Ember`. Bundle ID: choose **Explicit** and type `io.github.ravikiranpanchal.willoffire`. Click Register.
+12. Click **Profiles**, then **+**. Choose **Mac App Store Connect**. Pick the App ID from step 11, then the certificate from step 8. Name it `Hidden Ember MAS`. Download it.
 13. Rename the downloaded file to `embedded.provisionprofile` and move it into the `desktop` folder inside the project folder.
 14. Click **Membership details** on the website. Copy your **Team ID** (10 letters and numbers). Give it to Claude and say "put my Team ID in". (A Team ID is not a secret.)
 
@@ -92,7 +92,7 @@ A certificate is Apple's way of knowing the app really came from you.
 
 ### B5. Make the shop page (30 minutes)
 19. Open https://appstoreconnect.apple.com and click **Apps**, then **+**, then **New App**.
-20. Tick **macOS**. Name: `Will of Fire: The Last Ember`. Bundle ID: pick yours. SKU: type `willoffire1`.
+20. Tick **macOS**. Name: `Hidden Ember`. Bundle ID: pick yours. SKU: type `willoffire1`.
 21. Open the file `store/mac-listing.md`. Copy each text into the box with the same name.
 22. Upload the pictures called `mac-...png` from `store/graphics`.
 23. Click **App Privacy**. Choose **No, we do not collect data**. Privacy policy link: `https://ravikiran-panchal.github.io/fable-experiment/privacy.html`

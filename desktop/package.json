@@ -1,8 +1,8 @@
 {
   "name": "will-of-fire-desktop",
-  "productName": "Will of Fire",
+  "productName": "Hidden Ember",
   "version": "0.4.0",
-  "description": "Will of Fire: The Last Ember. Desktop app wrapper (Mac App Store, and Windows if wanted).",
+  "description": "Hidden Ember. Desktop app wrapper (Mac App Store, and Windows if wanted).",
   "main": "main.js",
   "private": true,
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "build": {
     "appId": "io.github.ravikiranpanchal.willoffire",
-    "productName": "Will of Fire",
+    "productName": "Hidden Ember",
     "copyright": "Copyright © 2026",
     "directories": {
       "output": "out"

@@ -20,13 +20,13 @@ await import('./audio-scan.mjs');
 const css = await readFile(r('web', 'style.css'), 'utf8');
 const body = await readFile(r('web', 'body.html'), 'utf8');
 const fonts = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Maru+Gothic:wght@500;700&display=swap">';
-const head = `<title>Will of Fire: The Last Ember</title>\n<meta name="claude:viewport-fit-sides" content="cover">\n${fonts}\n<style>\n${css}\n</style>`;
+const head = `<title>Hidden Ember</title>\n<meta name="claude:viewport-fit-sides" content="cover">\n${fonts}\n<style>\n${css}\n</style>`;
 
 await mkdir(r('dist'), { recursive: true });
 
 const SITE = 'https://ravikiran-panchal.github.io/fable-experiment/';
-const DESC = 'Will of Fire: The Last Ember. A playable 3D anime ninja village built entirely from code. Weave hand signs into jutsu, duel two rogues at the pagoda and light the beacon.';
-const share = `<meta name="description" content="${DESC}">\n<meta property="og:type" content="website">\n<meta property="og:title" content="Will of Fire: The Last Ember">\n<meta property="og:description" content="${DESC}">\n<meta property="og:url" content="${SITE}">\n<meta property="og:image" content="${SITE}cover.jpg">\n<meta name="twitter:card" content="summary_large_image">\n<meta name="theme-color" content="#0e0b16">`;
+const DESC = 'Hidden Ember. A playable 3D anime ninja village built entirely from code. Weave hand signs into jutsu, duel two rogues at the pagoda and light the beacon.';
+const share = `<meta name="description" content="${DESC}">\n<meta property="og:type" content="website">\n<meta property="og:title" content="Hidden Ember">\n<meta property="og:description" content="${DESC}">\n<meta property="og:url" content="${SITE}">\n<meta property="og:image" content="${SITE}cover.jpg">\n<meta name="twitter:card" content="summary_large_image">\n<meta name="theme-color" content="#0e0b16">`;
 const js = await bundle();
 
 // 1) The game as one file. play.html is for double-clicking; index.html is the same file for the public
@@ -36,6 +36,6 @@ await writeFile(r('play.html'), page);
 await writeFile(r('index.html'), page);
 
 // 2) Page fragment for the Claude artifact link (the host adds its own html/head/body wrapper). Always silent.
-await writeFile(r('dist', 'will-of-fire.artifact.html'), `${head}\n${body}\n<script>\n${js}\n</script>\n`);
+await writeFile(r('dist', 'hidden-ember.artifact.html'), `${head}\n${body}\n<script>\n${js}\n</script>\n`);
 
-console.log('built play.html + index.html', (Buffer.byteLength(js) / 1024).toFixed(0) + ' KB', '| dist/will-of-fire.artifact.html');
+console.log('built play.html + index.html', (Buffer.byteLength(js) / 1024).toFixed(0) + ' KB', '| dist/hidden-ember.artifact.html');

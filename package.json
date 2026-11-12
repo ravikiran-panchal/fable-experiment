@@ -2,7 +2,7 @@
   "name": "fable-experiment",
   "version": "0.4.0",
   "type": "module",
-  "description": "Will of Fire: The Last Ember. A playable anime ninja village generated entirely from code",
+  "description": "Hidden Ember. A playable anime ninja village generated entirely from code",
   "scripts": {
     "build": "node scripts/build.mjs",
     "start": "node scripts/serve.mjs",

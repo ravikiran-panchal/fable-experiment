@@ -2,7 +2,7 @@
 
 **App name** (30 characters max, this is 28)
 
-Will of Fire: The Last Ember
+Hidden Ember
 
 **Short description** (80 characters max)
 
@@ -47,7 +47,6 @@ by the same rules, and it also hands the rights holder written proof that the ga
 What ranks instead, and is allowed, is the genre language players actually type. It is already worked into
 the texts above: **ninja, shinobi, anime, jutsu, hand signs, ninja village, ninja academy, ramen**.
 
-**The title.** "Will of Fire" is a phrase strongly tied to that same series (it is the name of one of its
-films). It is your call and it is used everywhere now, but together with the names Tachi and Susake it makes
-a takedown complaint more likely. The cheapest protection is to rename those two characters before going
+**The title.** Renamed back to "Hidden Ember" on 12 Nov 2026 (the earlier "Will of Fire" title is a phrase tied to that
+same series). The names Tachi and Susake still make a takedown complaint more likely. The cheapest protection is to rename those two characters before going
 public (`src/main.js`, `src/story.js`).

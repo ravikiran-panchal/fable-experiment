@@ -29,9 +29,9 @@ camera tracks: that needs a person in front of a camera.
 
 | Name (label) | What it is | Signs |
 | --- | --- | --- |
-| Rensengon | Spiral energy sphere | Palm, Fist, Palm |
-| Chidoree | Lightning blade | Spike, Blade, Palm |
-| Sharingon | Eye awakening (drawn on your real eyes) | Horns, Blade |
+| Windball | Spiral energy sphere | Palm, Fist, Palm |
+| Lightning Burst | Lightning blade | Spike, Blade, Palm |
+| Eyes of the Mystic | Eye awakening (drawn on your real eyes) | Horns, Blade |
 | Suna no Tatte | Sand guardian, sand you can push | Fist, Gate |
 | Panda Tsukiyomo | Genjutsu: bamboo valley of bowing pandas | Spike, Horns, Gate |
 | Gokakyo | Fire stream | Palm, Horns, Blade |
@@ -53,8 +53,8 @@ touch or the fingers to interlock, because the tracker loses hands that overlap.
 | `vendor/mediapipe/` | The hand and face tracking library and models (see `licenses.md`). |
 | `scripts/` | `serve.mjs` local server, `vendor.mjs` refreshes `vendor/`, `build-audio.mjs` rebuilds the sounds. |
 
-## Putting it online (GitHub Pages)
+## Online
 
-Push to `main`, then in the repository: Settings > Pages > Deploy from a branch > `main` / root.
-Every path in the site is relative, so it works under `https://<user>.github.io/hand-sign-jutsu/`.
-The camera only works over https or on localhost: Pages is https, a LAN address like `http://192.168.x.x` is not.
+Lives in the `fable-experiment` repo since 12 Nov 2026 (folder `hand-sign-jutsu/`), so it is published with the game's
+GitHub Pages site: https://ravikiran-panchal.github.io/fable-experiment/hand-sign-jutsu/
+Every path in the site is relative, so nothing else is needed. The camera only works over https or on localhost.

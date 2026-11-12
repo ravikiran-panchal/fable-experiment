@@ -86,7 +86,7 @@ public class MainActivity extends BridgeActivity {
 const res = A('app', 'src', 'main', 'res');
 mkdirSync(path.join(res, 'drawable'), { recursive: true });
 writeFileSync(path.join(res, 'drawable', 'ic_launcher_foreground.xml'), `<?xml version="1.0" encoding="utf-8"?>
-<!-- Will of Fire: an ember inside a lantern ring. Same drawing as store/graphics/icon.svg. -->
+<!-- Hidden Ember: an ember inside a lantern ring. Same drawing as store/graphics/icon.svg. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
     <path android:fillColor="#1d1630" android:pathData="M54,54m-40,0a40,40 0,1 0,80 0a40,40 0,1 0,-80 0"/>

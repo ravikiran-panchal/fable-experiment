@@ -1,4 +1,4 @@
-// Will of Fire: The Last Ember, as a desktop app. The game is the same web build as everywhere else
+// Hidden Ember, as a desktop app. The game is the same web build as everywhere else
 // (packed into ./www by `npm run desktop` in the project root). It is served from inside the app under
 // app://game/ so the camera and the hand tracker work, and it makes no outside requests.
 const { app, BrowserWindow, protocol, net, session, systemPreferences, shell } = require('electron');
@@ -30,7 +30,7 @@ app.whenReady().then(async () => {
 
   if (SHOTS) return require('./shots.js')(SHOTS);
   const win = new BrowserWindow({
-    width: 1280, height: 800, minWidth: 800, minHeight: 500, backgroundColor: '#0e0b16', show: !TEST, title: 'Will of Fire',
+    width: 1280, height: 800, minWidth: 800, minHeight: 500, backgroundColor: '#0e0b16', show: !TEST, title: 'Hidden Ember',
     webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
   win.webContents.setWindowOpenHandler(({ url }) => { if (/^https:/.test(url)) shell.openExternal(url); return { action: 'deny' }; });
