@@ -21,7 +21,8 @@ export class UI {
     };
     this.dialogState = null; this.toastT = 0; this.cardT = 0; this.calloutT = 0;
     this.el.dialog.addEventListener('click', () => this.advance());
-    this.el.dialog.addEventListener('touchend', (e) => { e.preventDefault(); this.advance(); });
+    // A tap on a choice button must be left alone: cancelling the touch here would also cancel the button's click on phones.
+    this.el.dialog.addEventListener('touchend', (e) => { if (this.asking || e.target.closest?.('#choices')) return; e.preventDefault(); this.advance(); });
     this.mapCtx = this.el.map.getContext('2d');
     this.mapBase = null;
   }
