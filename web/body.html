@@ -26,22 +26,29 @@
   </div>
 
   <div id="touch">
-    <div class="stick"><div class="knob"></div></div>
-    <div class="tools">
-      <button type="button" data-act="view">CAM</button>
-      <button type="button" data-act="train">TRAIN</button>
-      <button type="button" data-act="time">TIME</button>
+    <div class="stick" data-key="stick"><div class="knob"></div></div>
+    <button type="button" id="t-menu" data-key="menu" aria-label="Menu">MENU</button>
+    <button type="button" data-act="interact" id="t-interact" hidden>USE</button>
+    <button type="button" data-act="throw" data-key="throw" class="tb t-small">STAR</button>
+    <button type="button" data-act="weave" data-key="weave" class="tb t-sign">SIGN</button>
+    <button type="button" data-act="special" data-key="special" class="tb t-mid">KI</button>
+    <button type="button" data-act="dash" data-key="dash" class="tb t-mid">DASH</button>
+    <button type="button" data-act="jump" data-key="jump" class="tb t-mid">JUMP</button>
+    <button type="button" data-act="attack" data-key="attack" class="tb t-big">HIT</button>
+    <div id="t-menu-box" hidden>
+      <button type="button" data-m="view">Camera: near / far</button>
+      <button type="button" data-m="train">Training ground</button>
+      <button type="button" data-m="time">Time of day</button>
+      <button type="button" data-m="edit">Move the buttons</button>
+      <button type="button" data-m="full">Full screen</button>
     </div>
-    <div class="pad">
-      <button type="button" data-act="interact" class="t-small" id="t-interact">USE</button>
-      <button type="button" data-act="throw" class="t-small">STAR</button>
-      <button type="button" data-act="weave" class="t-small">SIGN</button>
-      <button type="button" data-act="special" class="t-mid">KI</button>
-      <button type="button" data-act="dash" class="t-mid">DASH</button>
-      <button type="button" data-act="jump" class="t-mid">JUMP</button>
-      <button type="button" data-act="attack" class="t-big">HIT</button>
+    <div id="t-edit" hidden>
+      <p>Drag any button to move it. Tap one, then make it smaller or bigger.</p>
+      <div><button type="button" data-e="smaller">Smaller</button><button type="button" data-e="bigger">Bigger</button><button type="button" data-e="reset">Reset all</button><button type="button" data-e="done">Done</button></div>
     </div>
   </div>
+  <button type="button" id="t-leave" hidden>Leave training</button>
+  <div id="rotate"><div><b>Turn your phone sideways</b><p>Will of Fire plays in landscape, like a console game.</p><button type="button" id="rotate-skip">Play upright anyway</button></div></div>
 
   <aside id="weave" hidden aria-label="Sign weave">
     <div class="w-head"><b>SIGN WEAVE</b><button type="button" id="weave-close" aria-label="Close the weave"><kbd>V</kbd> close</button></div>

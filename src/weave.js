@@ -29,6 +29,8 @@ export class Weave {
     this.matcher = new WeaveMatcher(JUTSU);
     this.focus = false; this.focusT = 0; this.hinted = false; this.cool = 0;
     this.cam = 'off'; // off | loading | on
+    this.phone = matchMedia('(pointer: coarse)').matches; // phones: SIGN turns the camera on by itself and the panel stays small
+    this.camOff = false; // the player switched the camera off in the panel: leave it off until they switch it back. A refused permission is asked again on every SIGN
     this.tracker = null; this.hands = []; this.signs = new Set(); this.lastDetect = 0; this.lastVideoTime = -1;
     this.el = { panel: $('#weave'), status: $('#weave-status'), list: $('#weave-list'), pad: $('#weave-pad'), camBtn: $('#weave-cam'), pip: $('#weave-pip'), cv: $('#weave-cv'), video: $('#weave-video'), pill: $('#sign-pill'), note: $('#weave-note') };
     this.ctx = this.el.cv.getContext('2d');
@@ -60,6 +62,7 @@ export class Weave {
     this.G.ui.app.classList.add('weaving');
     this.el.panel.hidden = false;
     this.G.audio.play('ui');
+    if (this.phone && this.cam === 'off' && !this.camOff) this.startCamera();
     this.render();
     return true;
   }
@@ -112,13 +115,14 @@ export class Weave {
       [...li.querySelectorAll('.w-seq span')].forEach((s, i) => { s.classList.toggle('done', live && i < n); s.classList.toggle('next', live && i === n); });
     }
     for (const b of this.el.pad.children) b.classList.toggle('want', want.has(b.dataset.sign));
-    this.el.camBtn.textContent = this.cam === 'on' ? 'Camera on (B turns it off)' : this.cam === 'loading' ? 'Starting camera…' : 'Weave with your camera (B)';
+    this.el.camBtn.textContent = this.phone ? (this.cam === 'on' ? 'Camera on' : this.cam === 'loading' ? 'Starting…' : 'Camera off') : this.cam === 'on' ? 'Camera on (B turns it off)' : this.cam === 'loading' ? 'Starting camera…' : 'Weave with your camera (B)';
+    this.el.panel.classList.toggle('cam-on', this.cam === 'on');
     this.el.pip.hidden = this.cam !== 'on';
     this.el.pill.textContent = this.cam === 'on' ? 'Signs: camera' : 'Signs: V';
   }
 
   // ---------------------------------------------------------------- camera
-  toggleCamera() { if (this.cam === 'off') this.startCamera(); else if (this.cam === 'on') { this.stopCamera(); this.G.ui.toast('Camera off. The sign pad still works'); } }
+  toggleCamera() { if (this.cam === 'off') { this.camOff = false; this.startCamera(); } else if (this.cam === 'on') { this.camOff = true; this.stopCamera(); this.G.ui.toast('Camera off. The sign pad still works'); } }
 
   stopCamera() {
     this.el.video.srcObject?.getTracks().forEach((t) => t.stop());
@@ -136,7 +140,7 @@ export class Weave {
     let stream;
     try { stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } }); }
     catch (err) {
-      const why = { NotAllowedError: 'Camera is blocked. Allow it next to the address bar, then press B', NotFoundError: 'No camera found. The sign pad still works', NotReadableError: 'Camera is busy in another app (a call, OBS). Close it, then press B' }[err.name];
+      const why = { NotAllowedError: this.phone ? 'Camera not allowed. Tap SIGN to be asked again. If no question appears, tap the lock by the address bar and allow Camera' : 'Camera is blocked. Allow it next to the address bar, then press B', NotFoundError: 'No camera found. The sign pad still works', NotReadableError: 'Camera is busy in another app (a call, OBS). Close it, then press B' }[err.name];
       return fail(why || 'Camera could not start. The sign pad still works');
     }
     this.el.video.srcObject = stream;
@@ -177,12 +181,12 @@ export class Weave {
     this.cool -= dt;
     if (this.noteT > 0 && (this.noteT -= dt) <= 0) this.el.note.textContent = '';
     if (!G.player) return;
-    if (!this.hinted && this.canFocus) { this.hinted = true; G.ui.toast('New: press V to weave hand signs into jutsu', 4.5); }
+    if (!this.hinted && this.canFocus) { this.hinted = true; G.ui.toast(this.phone ? 'New: tap SIGN to weave hand signs into jutsu' : 'New: press V to weave hand signs into jutsu', 4.5); }
     if (I.hit('camera')) this.toggleCamera();
     if (I.hit('weave')) { if (this.focus) this.close(); else this.open(); }
     if (this.focus && !this.canFocus) this.close();
 
-    if (this.cam === 'on' && (this.focus || (this.canFocus && this.cool <= 0)) && this.readCamera(now)) {
+    if (this.cam === 'on' && (this.focus || (!this.phone && this.canFocus && this.cool <= 0)) && this.readCamera(now)) { // phones only read hands while the weave is open (saves battery)
       if (!this.focus) this.matcher.list = this.known();
       this.matcher.holdMs = this.focus ? 260 : 480; // the sign that starts a weave must be held a little longer
       const r = this.matcher.update(this.signs, now, this.hands.length);
@@ -192,12 +196,12 @@ export class Weave {
     }
 
     if (!this.focus) return;
-    this.focusT += dt;
+    if (this.cam !== 'loading') this.focusT += dt; // the clock waits while the camera starts
     if (this.focusT > MAX_FOCUS) return this.close('The weave slips');
     const seen = this.signs.has('gate') ? 'gate' : [...this.signs][0];
     this.el.status.textContent = this.cam === 'on'
       ? (!this.hands.length ? 'Show your hand to the camera' : seen ? `Seeing: ${SIGN_NAMES[seen]}` : 'Hand found. Shape not clear yet')
-      : this.cam === 'loading' ? 'Starting the camera…' : 'Press 1 to 6, or tap a sign';
+      : this.cam === 'loading' ? 'Starting the camera… you can tap the signs meanwhile' : this.phone ? 'Tap the signs in order' : 'Press 1 to 6, or tap a sign';
     this.el.panel.style.setProperty('--left', (1 - this.focusT / MAX_FOCUS).toFixed(3));
     this.el.panel.style.setProperty('--hold', this.matcher.hold.toFixed(2));
     if (G.frameN % 10 === 0) this.render(); // keeps the "not enough ki" dimming current

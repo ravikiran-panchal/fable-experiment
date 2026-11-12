@@ -12,7 +12,7 @@ export class Input {
     this.keys = new Set(); this.pressed = new Set(); this.virtual = new Set(); this.vPressed = new Set();
     this.look = { x: 0, y: 0 }; this.zoom = 0;
     this.stick = { x: 0, y: 0, id: null };
-    this.locked = false; this.touch = false; this.anyKey = false;
+    this.locked = false; this.touch = false; this.editing = false; this.anyKey = false;
     this.codeToAction = {};
     for (const a in KEYS) for (const c of KEYS[a]) this.codeToAction[c] = a;
 
@@ -49,26 +49,32 @@ export class Input {
     // touch: left thumb moves, right thumb looks, buttons act
     const stickEl = touchRoot.querySelector('.stick'), knob = touchRoot.querySelector('.knob');
     const lookTouches = new Map();
+    const moveStick = (t) => {
+      let dx = t.clientX - this.stick.ox, dy = t.clientY - this.stick.oy;
+      const d = Math.hypot(dx, dy), m = this.stick.max || 56, k = stickEl.offsetWidth ? (stickEl.getBoundingClientRect().width / stickEl.offsetWidth) : 1;
+      if (d > m) { dx *= m / d; dy *= m / d; }
+      this.stick.x = dx / m; this.stick.y = dy / m;
+      knob.style.transform = `translate(${dx / k}px, ${dy / k}px)`; // the knob lives inside the (possibly resized) stick
+    };
     const enableTouch = () => { if (!this.touch) { this.touch = true; document.documentElement.classList.add('touch'); } };
+    addEventListener('touchstart', enableTouch, { passive: true, capture: true });
+    if (matchMedia('(pointer: coarse)').matches) enableTouch();
+    // The stick stays where it is drawn. A thumb that lands on it (or just beside it) moves; any other touch on the picture looks around.
     canvas.addEventListener('touchstart', (e) => {
-      enableTouch();
+      if (this.editing) return;
       for (const t of e.changedTouches) {
-        if (t.clientX < innerWidth * 0.45 && this.stick.id === null) {
-          this.stick.id = t.identifier; this.stick.ox = t.clientX; this.stick.oy = t.clientY;
-          stickEl.style.left = t.clientX + 'px'; stickEl.style.top = t.clientY + 'px'; stickEl.classList.add('on');
+        const r = stickEl.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        if (this.stick.id === null && Math.hypot(t.clientX - cx, t.clientY - cy) < r.width * 0.5 + 44) {
+          this.stick.id = t.identifier; this.stick.ox = cx; this.stick.oy = cy; this.stick.max = r.width * 0.45;
+          stickEl.classList.add('on'); moveStick(t);
         } else lookTouches.set(t.identifier, { x: t.clientX, y: t.clientY });
       }
       e.preventDefault();
     }, { passive: false });
     canvas.addEventListener('touchmove', (e) => {
       for (const t of e.changedTouches) {
-        if (t.identifier === this.stick.id) {
-          let dx = t.clientX - this.stick.ox, dy = t.clientY - this.stick.oy;
-          const d = Math.hypot(dx, dy), m = 56;
-          if (d > m) { dx *= m / d; dy *= m / d; }
-          this.stick.x = dx / m; this.stick.y = dy / m;
-          knob.style.transform = `translate(${dx}px, ${dy}px)`;
-        } else if (lookTouches.has(t.identifier)) {
+        if (t.identifier === this.stick.id) moveStick(t);
+        else if (lookTouches.has(t.identifier)) {
           const l = lookTouches.get(t.identifier);
           this.look.x += (t.clientX - l.x) * 2.4; this.look.y += (t.clientY - l.y) * 2.4;
           l.x = t.clientX; l.y = t.clientY;
@@ -85,7 +91,7 @@ export class Input {
     canvas.addEventListener('touchend', end); canvas.addEventListener('touchcancel', end);
     for (const b of touchRoot.querySelectorAll('[data-act]')) {
       const a = b.dataset.act;
-      b.addEventListener('touchstart', (e) => { enableTouch(); this.virtual.add(a); this.pressed.add(a); b.classList.add('on'); e.preventDefault(); e.stopPropagation(); }, { passive: false });
+      b.addEventListener('touchstart', (e) => { if (this.editing) return; this.virtual.add(a); this.pressed.add(a); b.classList.add('on'); e.preventDefault(); e.stopPropagation(); }, { passive: false });
       const up = (e) => { this.virtual.delete(a); b.classList.remove('on'); e.preventDefault(); };
       b.addEventListener('touchend', up); b.addEventListener('touchcancel', up);
     }

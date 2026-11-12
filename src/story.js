@@ -505,7 +505,7 @@ export class Story {
       this.trainBack = { pos: P.pos.clone(), yaw: P.yaw };
       P.pos.set(POI.training.x, 0, POI.training.z + 8); P.yaw = Math.PI;
       this.training = true;
-      ui.objective('Training ground. Ki never runs out here. V weaves a jutsu, Z goes back');
+      ui.objective(G.input.touch ? 'Training ground. Ki never runs out here. Tap Leave training (top) to go back' : 'Training ground. Ki never runs out here. V weaves a jutsu, Z goes back');
     } else {
       P.pos.copy(this.trainBack.pos); P.yaw = this.trainBack.yaw;
       this.training = false;

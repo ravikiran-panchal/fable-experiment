@@ -23,6 +23,7 @@ export class UI {
     this.el.dialog.addEventListener('click', () => this.advance());
     // A tap on a choice button must be left alone: cancelling the touch here would also cancel the button's click on phones.
     this.el.dialog.addEventListener('touchend', (e) => { if (this.asking || e.target.closest?.('#choices')) return; e.preventDefault(); this.advance(); });
+    this.el.view.addEventListener('touchstart', () => { if (this.dialogState) this.advance(); }, { passive: true }); // phones: tap anywhere to continue
     this.mapCtx = this.el.map.getContext('2d');
     this.mapBase = null;
   }
@@ -83,7 +84,8 @@ export class UI {
   prompt(t) {
     this.el.prompt.hidden = !t;
     if (t) this.el.prompt.lastElementChild.textContent = t;
-    this.el.tInteract.style.borderColor = t ? 'var(--ember)' : '';
+    this.el.tInteract.hidden = !t; // on phones the prompt is the button
+    if (t && this.el.tInteract.textContent !== t) this.el.tInteract.textContent = t;
   }
   cine(on) { this.app.classList.toggle('cine', on); }
   hudHidden(on) { this.app.classList.toggle('nohud', on); }

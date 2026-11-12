@@ -8,6 +8,7 @@ import { World, POI } from './world.js';
 import { FX } from './fx.js';
 import { Input } from './input.js';
 import { UI } from './ui.js';
+import { TouchUI } from './touch.js';
 import { GameAudio } from './audio.js';
 import { Story } from './story.js';
 import { Jutsu } from './jutsu.js';
@@ -54,6 +55,7 @@ G.projectiles = new Projectiles(G);
 G.ui.buildMap(G.world);
 G.jutsu = new Jutsu(G);
 G.weave = new Weave(G);
+G.touchUI = new TouchUI(G);
 G.ether = new Ether(G);
 G.dream = new Dream(G);
 G.jobs = new Jobs(G);
@@ -337,6 +339,7 @@ function tick(dt) {
   }
 
   G.story.update(dt);
+  G.touchUI.update();
   if (P) {
     P.update(sim);
     focus.copy(P.pos);

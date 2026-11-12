@@ -117,21 +117,6 @@ small { font-size: 0.72em; letter-spacing: 0.08em; text-transform: uppercase; co
 .touch .keys { display: none; }
 .touch .objective { bottom: auto; top: 124px; }
 .touch #prompt kbd { display: none; }
-.stick { position: absolute; left: 90px; top: 70%; width: 112px; height: 112px; margin: -56px 0 0 -56px; border-radius: 50%; border: 2px solid rgba(246, 236, 217, 0.35); background: rgba(14, 11, 22, 0.25); opacity: 0.5; }
-.stick.on { opacity: 1; }
-.knob { position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; margin: -24px; border-radius: 50%; background: rgba(246, 236, 217, 0.8); }
-.pad { position: absolute; right: var(--gut-r); bottom: calc(22px + env(safe-area-inset-bottom, 0px)); width: 216px; height: 200px; pointer-events: none; }
-.pad button { all: unset; position: absolute; pointer-events: auto; display: grid; place-items: center; border-radius: 50%; font-family: var(--display); font-size: 11px; letter-spacing: 0.04em; color: var(--paper); background: rgba(14, 11, 22, 0.5); border: 2px solid rgba(246, 236, 217, 0.5); touch-action: none; }
-.pad button.on { background: var(--hero); color: var(--ink); }
-.pad button.t-big { width: 84px; height: 84px; right: 0; bottom: 0; border-color: var(--ember); font-size: 14px; }
-.pad button.t-mid { width: 58px; height: 58px; }
-.pad button.t-small { width: 46px; height: 46px; font-size: 10px; }
-.pad [data-act="jump"] { right: 96px; bottom: 4px; }
-.pad [data-act="dash"] { right: 78px; bottom: 74px; }
-.pad [data-act="special"] { right: 8px; bottom: 98px; border-color: var(--hero); }
-.pad [data-act="throw"] { right: 150px; bottom: 76px; }
-.pad [data-act="interact"] { right: 162px; bottom: 14px; }
-
 @media (max-width: 720px) {
   .keys { display: none; }
   .map { width: 92px; height: 92px; }
@@ -189,12 +174,6 @@ small { font-size: 0.72em; letter-spacing: 0.08em; text-transform: uppercase; co
 #weave-pad svg { height: 30px; width: auto; fill: currentColor; }
 #weave-pad kbd { position: absolute; left: 3px; top: 3px; font-size: 10px; padding: 0 4px; }
 #weave-cam { all: unset; box-sizing: border-box; cursor: pointer; text-align: center; font-weight: 700; font-size: 13px; padding: 8px 10px; background: var(--ink); border: 1px solid var(--ki); color: var(--ki); flex: none; }
-.pad [data-act="weave"] { right: 72px; bottom: 142px; border-color: var(--ember); }
-@media (max-width: 720px) {
-  #weave { top: auto; left: var(--gut-l); width: auto; max-height: 72%; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
-  #weave-list p { display: none; }
-  #weave-pip { width: 46%; align-self: center; }
-}
 @media (prefers-reduced-motion: reduce) { #weave { animation: none; } #view { transition: none; } }
 
 /* ------------------------------------------------------------ v3: dream, choices, coins, elements */
@@ -229,12 +208,6 @@ small { font-size: 0.72em; letter-spacing: 0.08em; text-transform: uppercase; co
 #weave-list li.sealed .w-seq { filter: blur(3px); }
 @media (prefers-reduced-motion: reduce) { #wallet { animation-duration: 0.01s; } }
 
-/* touch: small tool buttons under the minimap (camera near/far, training ground, time of day) */
-.tools { position: absolute; right: calc(var(--gut-r) + 140px); top: 14px; display: flex; flex-direction: column; gap: 5px; pointer-events: none; text-align: center; }
-.touch .foes { right: calc(var(--gut-r) + 214px); }
-.tools button { all: unset; pointer-events: auto; touch-action: none; font-family: var(--display); font-size: 10px; letter-spacing: 0.06em; color: var(--paper); padding: 7px 9px; background: rgba(14, 11, 22, 0.55); border: 1px solid rgba(246, 236, 217, 0.45); }
-.tools button.on { background: var(--hero); color: var(--ink); }
-
 /* title: subtitle and saved games */
 #title .subtitle { margin: 8px 0 0; font-family: var(--display); font-size: clamp(16px, 2.6vw, 30px); letter-spacing: 0.22em; text-transform: uppercase; color: var(--paper); text-shadow: 0 3px 0 var(--ink); }
 #saves { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; width: 100%; }
@@ -244,3 +217,75 @@ small { font-size: 0.72em; letter-spacing: 0.08em; text-transform: uppercase; co
 #saves button small { display: block; font-weight: 500; font-size: 11px; color: inherit; opacity: 0.8; }
 #saves .cp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; width: 100%; }
 #saves .cp-list[hidden] { display: none; }
+
+/* ------------------------------------------------------------ touch controls (v0.5): landscape, fixed stick, movable buttons */
+#touch { --tb: calc(16px + env(safe-area-inset-bottom, 0px)); }
+.touch .map { width: 96px; height: 96px; }
+.touch .foes { right: calc(var(--gut-r) + 190px); }
+.touch .objective { max-width: min(300px, 46vw); font-size: 13px; padding: 4px 10px; }
+.touch #sign-pill, .touch #look-name, .touch #prompt { display: none; }
+.stick { position: absolute; left: calc(var(--gut-l) + 26px); bottom: calc(var(--tb) + 14px); width: 124px; height: 124px; border-radius: 50%; border: 2px solid rgba(246, 236, 217, 0.4); background: rgba(14, 11, 22, 0.28); opacity: 0.6; touch-action: none; }
+.stick.on { opacity: 1; }
+.knob { position: absolute; left: 50%; top: 50%; width: 52px; height: 52px; margin: -26px; border-radius: 50%; background: rgba(246, 236, 217, 0.8); }
+#touch button { all: unset; box-sizing: border-box; pointer-events: auto; touch-action: none; font-family: var(--display); color: var(--paper); text-align: center; }
+#touch .tb { position: absolute; display: grid; place-items: center; border-radius: 50%; font-size: 11px; letter-spacing: 0.04em; background: rgba(14, 11, 22, 0.5); border: 2px solid rgba(246, 236, 217, 0.5); }
+#touch .tb.on { background: var(--hero); color: var(--ink); }
+#touch .tb.t-big { width: 84px; height: 84px; right: var(--gut-r); bottom: calc(var(--tb) + 8px); border-color: var(--ember); font-size: 14px; }
+#touch .tb.t-mid { width: 60px; height: 60px; }
+#touch .tb.t-small { width: 48px; height: 48px; font-size: 10px; }
+#touch .tb.t-sign { width: 56px; height: 56px; border-color: var(--ember); color: var(--ember); right: calc(var(--gut-r) + 8px); bottom: calc(var(--tb) + 176px); }
+#touch .tb[data-act="jump"] { right: calc(var(--gut-r) + 96px); bottom: var(--tb); }
+#touch .tb[data-act="dash"] { right: calc(var(--gut-r) + 86px); bottom: calc(var(--tb) + 70px); }
+#touch .tb[data-act="special"] { right: calc(var(--gut-r) + 12px); bottom: calc(var(--tb) + 104px); border-color: var(--hero); }
+#touch .tb[data-act="throw"] { right: calc(var(--gut-r) + 166px); bottom: calc(var(--tb) + 6px); }
+/* the one context button: it only exists while there is something to do, and it says what it does */
+#touch #t-interact { position: absolute; left: 50%; bottom: 24%; transform: translateX(-50%); min-height: 50px; padding: 0 22px; display: grid; place-items: center; font-family: var(--body); font-weight: 700; font-size: 16px; white-space: nowrap; background: var(--ember); color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+#touch #t-interact.on { background: var(--paper); }
+#touch #t-menu { position: absolute; top: 14px; right: calc(var(--gut-r) + 108px); font-size: 10px; letter-spacing: 0.06em; padding: 9px 10px; background: rgba(14, 11, 22, 0.55); border: 1px solid rgba(246, 236, 217, 0.45); }
+#t-menu-box { position: absolute; top: 50px; right: calc(var(--gut-r) + 108px); display: grid; gap: 4px; padding: 6px; background: rgba(14, 11, 22, 0.9); border-top: 3px solid var(--ember); z-index: 2; }
+#touch #t-menu-box button, #touch #t-edit button { font-family: var(--body); font-weight: 700; font-size: 14px; padding: 10px 14px; background: rgba(246, 236, 217, 0.08); border: 1px solid rgba(246, 236, 217, 0.2); text-align: left; }
+#t-edit { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: min(430px, calc(100% - 32px)); box-sizing: border-box; padding: 8px 12px 10px; background: rgba(14, 11, 22, 0.92); border-top: 3px solid var(--ember); pointer-events: auto; z-index: 3; }
+#t-edit p { margin: 0 0 8px; font-size: 13px; font-weight: 700; }
+#t-edit div { display: flex; flex-wrap: wrap; gap: 6px; }
+#touch #t-edit button[data-e="done"] { background: var(--ember); color: var(--ink); margin-left: auto; }
+.editing #hud, .editing #t-interact, .editing #t-leave { opacity: 0.25; }
+.editing [data-key] { outline: 2px dashed var(--paper); outline-offset: 3px; pointer-events: auto; }
+.editing [data-key].sel { outline: 3px solid var(--ember); }
+.cine #touch, .nohud #touch { pointer-events: none; }
+.cine #touch button, .nohud #touch button { pointer-events: none; }
+.weaving #touch .tb, .weaving #touch #t-menu, .weaving #t-menu-box, .weaving #touch #t-interact { display: none; }
+#t-leave { all: unset; box-sizing: border-box; position: absolute; top: 14px; left: 50%; transform: translateX(-50%); z-index: 10; cursor: pointer; font-weight: 700; font-size: 14px; padding: 9px 16px; background: var(--ink); border: 1px solid var(--ember); color: var(--paper); box-shadow: 3px 3px 0 var(--ember); }
+.cine #t-leave, .weaving #t-leave { display: none; }
+#rotate { display: none; position: absolute; inset: 0; z-index: 70; place-items: center; text-align: center; padding: 24px; background: var(--ink); }
+#rotate b { display: block; font-family: var(--display); font-weight: 400; font-size: 24px; color: var(--ember); }
+#rotate p { margin: 10px 0 22px; color: var(--paper-dim); }
+#rotate button { all: unset; cursor: pointer; font-weight: 700; padding: 10px 16px; border: 1px solid var(--paper-dim); }
+@media (orientation: portrait) and (pointer: coarse) { #rotate:not(.skip) { display: grid; } }
+
+/* the sign weave on phones and short screens: a slim column on the right, so the scene stays in view */
+.touch #weave-close kbd { display: none; }
+@media (pointer: coarse), (max-height: 560px) {
+  #weave { top: 8px; bottom: auto; right: var(--gut-r); width: 232px; max-height: calc(100% - 16px); padding: 8px 10px; gap: 5px; background: rgba(14, 11, 22, 0.6); backdrop-filter: none; animation: none; }
+  .w-head { min-height: 24px; }
+  .w-head b { display: none; }
+  #weave-close { margin-left: auto; padding: 4px 6px; border: 1px solid rgba(246, 236, 217, 0.3); }
+  #weave-cam { position: absolute; top: 8px; left: 10px; font-size: 11px; padding: 4px 8px; }
+  #weave-pip { width: 104px; align-self: center; }
+  /* the sign pad leaves the column and sits along the bottom, between the stick and the column */
+  #weave-pad { position: fixed; left: calc(var(--gut-l) + 170px); right: calc(var(--gut-r) + 244px); bottom: calc(10px + env(safe-area-inset-bottom, 0px)); grid-template-columns: repeat(6, 1fr); gap: 4px; }
+  #weave-status { font-size: 12px; }
+  #weave-note:empty { display: none; }
+  #weave-list { gap: 3px; }
+  #weave-list li { padding: 2px 6px; }
+  #weave-list p, #weave-list li.out, #weave-list li.sealed { display: none; }
+  .w-name { flex-wrap: nowrap; gap: 6px; }
+  .w-name b { font-size: 12px; }
+  .w-name u { display: none; }
+  .w-name i { font-size: 9px; }
+  .w-seq span { height: 22px; }
+  .w-seq svg { height: 18px; }
+  #weave-pad button { padding: 5px 2px 3px; font-size: 10px; background: rgba(14, 11, 22, 0.6); overflow: hidden; }
+  #weave-pad svg { height: 26px; }
+  #weave-pad kbd { display: none; }
+  .weaving .map { display: none; }
+}
