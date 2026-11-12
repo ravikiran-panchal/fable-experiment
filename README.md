@@ -83,7 +83,7 @@ and a jutsu of a born element costs 25% less ki (marked ★ in the weave panel).
    and ale.
 5. Inn Hotaru. You book the room, walk to it, take the bath and sleep, all by hand. The room costs 10 of
    your 12 copper; the frog purse shows what is left.
-6. Next morning. On the way to the job board, Susake (your classmate Tachi's little brother) drags you to the
+6. Next morning. On the way to the job board, Satoru (your classmate Ito's little brother) drags you to the
    academy. You sit through a lesson on the six elements, then show three jutsu at the training ground.
    Free roam starts there.
 
@@ -217,34 +217,20 @@ roam), plus your coins. The title screen then shows **Continue** and a **Checkpo
 any earlier step. **New game** clears the list. Saves live in the browser's or app's own storage on that
 device (`src/save.js`); nothing is sent anywhere. Not saved: the time of day and a half-finished job.
 
-## Store apps (Google Play and Mac App Store)
+## Store apps
 
-The same game is wrapped twice. Both wrappers carry the game, sounds, typefaces and hand tracker inside them
-and make no outside requests.
-
-| Command | What it does |
-| --- | --- |
-| `npm run app` | Rebuilds the game, packs it into `app/www`, copies it into the `android` project |
-| `npm run android:setup` | Re-applies the app settings after `npx cap add android` |
-| `npm run desktop` | Packs the game into `desktop/www` for the Mac app |
-| `npm run desktop:test` | Starts the Mac app with no window and prints what works |
-| `npm run shots` | Takes the store screenshots and banners from the real game into `store/graphics` |
-| `npm run icons` | Remakes launcher icons, splash screens and the store icon (needs ffmpeg) |
-
-- Android: Capacitor project in `android/`. Compiling needs Android Studio.
-- Mac: Electron project in `desktop/` (`npm install` there first; `npm run mas` builds the App Store package
-  once your Apple certificate, profile and Team ID are in place). No Xcode needed.
-- Everything you do yourself, step by step, is in `store/LAUNCH-GUIDE.md`. Store texts and form answers are
-  next to it.
+Not built yet. The first Android (Capacitor) and Mac App Store (Electron) wrappers were deleted on 12 Nov 2026
+because nothing had been submitted; they get rebuilt from scratch when the game is ready to launch. They are
+still in the git history (commit 184ec29, "v0.4: rename ... saves, store apps") if any piece is useful later.
 
 ## Originality note
 
 The world, characters and story are original. It is a love letter to shinobi anime as a
 genre and deliberately does not use any existing series' characters, names, symbols or locations,
 so it is safe to publish and monetise. The woven jutsu follow the same rule: the Hand Sign Jutsu site uses
-sound-alike names, this game uses its own (Ember Comet, Storm Thread and so on). Keep it that way.
+its own names, this game uses its own (Ember Comet, Storm Thread and so on). Keep it that way.
 
 Two v3 details to know about. The nine-tailed fox is the kitsune of Japanese folklore and is drawn here as
 its own design. The frog coin purse is a gamaguchi ("toad mouth"), a real traditional purse, also drawn fresh.
-The names Tachi and Susake were chosen by the author and deliberately echo a famous pair of brothers; the
-characters themselves are original. If the game is ever sold, rename them in `src/main.js` and `src/story.js`.
+The brothers Ito (older) and Satoru (younger) were renamed on 12 Nov 2026 from earlier sound-alike names, so
+they no longer echo a famous anime pair. Both are ordinary Japanese names.

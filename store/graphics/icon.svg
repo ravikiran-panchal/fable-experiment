@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="1024" height="1024">
-  <!-- Hidden Ember app icon: an ember inside a lantern ring. Source for every icon size. -->
-  <rect width="108" height="108" fill="#0e0b16"/>
-  <circle cx="54" cy="54" r="40" fill="#1d1630"/>
-  <circle cx="54" cy="54" r="27" fill="none" stroke="#f6ecd9" stroke-width="2.4"/>
-  <path d="M54 22.6l3.2 4.4-3.2 4.4-3.2-4.4zM54 76.6l3.2 4.4-3.2 4.4-3.2-4.4zM22.6 54l4.4-3.2 4.4 3.2-4.4 3.2zM76.6 54l4.4-3.2 4.4 3.2-4.4 3.2z" fill="#ff8a3c"/>
-  <path d="M54 31C64 43 68 50 68 58C68 67 62 73 54 73C46 73 40 67 40 58C40 51 45 47 48 40C50 44 51 45 52 46C52 40 53 36 54 31Z" fill="#ff8a3c"/>
-  <path d="M54 50C59 56 61 60 61 64C61 69 58 72 54 72C50 72 47 69 47 64C47 60 50 56 54 50Z" fill="#ffd27a"/>
-</svg>

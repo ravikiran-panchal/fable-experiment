@@ -10,22 +10,11 @@
     "vendor": "node scripts/vendor.mjs",
     "audio:fetch": "node scripts/fetch-audio.mjs",
     "audio:next": "node scripts/fetch-audio.mjs --next",
-    "audio:list": "node scripts/fetch-audio.mjs --list",
-    "app": "node scripts/build-app.mjs",
-    "icons": "node scripts/make-icons.mjs",
-    "android:setup": "node scripts/setup-android.mjs",
-    "desktop": "node scripts/build-desktop.mjs",
-    "shots": "node scripts/build-desktop.mjs && node scripts/run-electron.mjs shots",
-    "desktop:test": "node scripts/build-desktop.mjs && node scripts/run-electron.mjs test"
+    "audio:list": "node scripts/fetch-audio.mjs --list"
   },
   "license": "UNLICENSED",
   "private": true,
   "devDependencies": {
-    "@capacitor/android": "^8.6.0",
-    "@capacitor/cli": "^8.6.0",
-    "@capacitor/core": "^8.6.0",
-    "@fontsource/dela-gothic-one": "^5.3.0",
-    "@fontsource/zen-maru-gothic": "^5.3.1",
     "@mediapipe/tasks-vision": "^1.2.2",
     "esbuild": "^0.24.0",
     "three": "^0.170.0"

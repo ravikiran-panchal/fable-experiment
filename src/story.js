@@ -26,7 +26,7 @@ export class Story {
       bath: 'Go through to your room. The bath is past it',
       sleep: 'Sleep in the futon',
       morning: 'Find work: check the job board north of the bridge',
-      academy: 'Go to the academy with Susake and take your old seat (back row)',
+      academy: 'Go to the academy with Satoru and take your old seat (back row)',
       showcase: `Training ground: weave 3 jutsu on the posts with V (${this.shown}/3)`,
       free: 'Free roam. The job board north of the bridge pays copper. Z trains, T changes the time of day',
     }[this.phase] || '';
@@ -207,16 +207,16 @@ export class Story {
     G.state.bonfire = on; G.world.town.festival.visible = on;
     if (on) { if (G.audio.loops.music_festival) { G.audio.stop('music_village'); G.audio.play('music_festival'); } G.audio.play('amb_fire'); }
     else { G.audio.stop('music_festival'); G.audio.stop('amb_fire'); G.audio.play('music_village'); }
-    const all = [...V, N.chef, N.teacher, N.susake, ...N.kids];
+    const all = [...V, N.chef, N.teacher, N.satoru, ...N.kids];
     for (const a of all) { takeProps(a.char); a.stage = null; }
     if (!on) { N.chef.goHome(); return; }
     for (const n of V) { n.hidden = false; n.cheer = false; }
-    for (const a of [N.teacher, N.susake, ...N.kids]) { a.hidden = false; a.follow = null; }
+    for (const a of [N.teacher, N.satoru, ...N.kids]) { a.hidden = false; a.follow = null; }
     const play = (a, at, yaw, anim, prop) => { a.stage = { at, yaw, anim }; if (prop) giveProp(a.char, prop); };
     play(V[0], [26.75, 35.5], side, { name: 'drum' }, 'sticks');           // taiko
     play(V[1], [26.5, 38.4], side - 0.35, { name: 'strum' }, 'shamisen');  // shamisen
     play(V[2], [26.5, 32.6], side + 0.35, { name: 'flute' }, 'flute');     // shakuhachi
-    [V[3], V[4], V[5], N.susake, N.kids[0], N.kids[1]].forEach((a, i) => { a.stage = { orbit: { c: F, r: 4.4, w: 0.42, ph: i * TAU / 6 }, anim: { name: 'dance' } }; });
+    [V[3], V[4], V[5], N.satoru, N.kids[0], N.kids[1]].forEach((a, i) => { a.stage = { orbit: { c: F, r: 4.4, w: 0.42, ph: i * TAU / 6 }, anim: { name: 'dance' } }; });
     play(N.chef, [13.9, 33.4], Math.PI / 2, { name: 'drink', seat: true, low: 0.2 }, 'mug');
     play(N.teacher, [13.9, 32.2], Math.PI / 2, { name: 'drink', seat: true, low: 0.2, ph: 2 }, 'mug');
     play(N.kids[2], [13.9, 37.0], Math.PI / 2, { name: 'sit' });
@@ -317,11 +317,11 @@ export class Story {
     for (const n of G.villagers) { n.hidden = false; n.cheer = false; }
     N.teacher.hidden = false; N.teacher.stage = { at: [POI.teacher.x, POI.teacher.y, POI.teacher.z], yaw: Math.PI, anim: { name: 'idle' } };
     [0, 1, 2, 4, 6].forEach((d, i) => { const k = N.kids[i]; k.hidden = false; k.stage = { at: [D[d].x, D[d].z], yaw: 0, anim: { name: 'sit' } }; });
-    N.susake.hidden = true; N.susake.stage = null;
+    N.satoru.hidden = true; N.satoru.stage = null;
   }
 
-  async meetSusake() {
-    const G = this.G, P = G.player, ui = G.ui, S = G.cast.susake;
+  async meetSatoru() {
+    const G = this.G, P = G.player, ui = G.ui, S = G.cast.satoru;
     this.hold();
     P.anim = { name: 'idle' };
     S.hidden = false; S.stage = null; S.follow = null; S.pos.set(1.5, 0, P.pos.z - 17);
@@ -331,12 +331,12 @@ export class Story {
     await ui.say('???', 'Hey! HEY! Wait! Lamplighter!', S.color);
     await run;
     S.follow = P; S.anim = { name: 'wave' };
-    await ui.say('Susake', 'It IS you! You beat the Pale Moths! My big brother Tachi says you two shared a desk at the academy.', S.color);
+    await ui.say('Satoru', 'It IS you! You beat the Pale Moths! My big brother Ito says you two shared a desk at the academy.', S.color);
     this.shot(v(P.pos.x - 2.2, 1.5, P.pos.z - 3.6), v(P.pos.x, 1.45, P.pos.z), 34, true);
-    await ui.say(P.hero.name, 'Tachi\'s little brother. You were about this tall when I left.', P.hero.color);
+    await ui.say(P.hero.name, 'Ito\'s little brother. You were about this tall when I left.', P.hero.color);
     this.shot(v(P.pos.x + 2.0, 1.2, P.pos.z + 0.6), v(S.pos.x, 0.9, S.pos.z), 32, true);
     S.anim = { name: 'cheer' };
-    await ui.say('Susake', 'I am Susake! Sensei says a graduate has to visit before they leave again. Come to the academy. Please! The whole class is waiting.', S.color);
+    await ui.say('Satoru', 'I am Satoru! Sensei says a graduate has to visit before they leave again. Come to the academy. Please! The whole class is waiting.', S.color);
     await ui.say(P.hero.name, '(Work can wait an hour. Two copper is not going to get any smaller.)', P.hero.color);
     S.anim = { name: 'idle' };
     this.release();
@@ -344,7 +344,7 @@ export class Story {
   }
 
   async lesson() {
-    const G = this.G, P = G.player, ui = G.ui, N = G.cast, S = N.susake, T = N.teacher, D = G.world.town.desks;
+    const G = this.G, P = G.player, ui = G.ui, N = G.cast, S = N.satoru, T = N.teacher, D = G.world.town.desks;
     this.busy = true; P.locked = true; ui.prompt(null);
     await ui.fade(true);
     ui.cine(true);
@@ -354,7 +354,7 @@ export class Story {
     this.shot(v(68.6, 2.7, -16.6), v(60, 2.0, -6.5), 46, true);
     this.shot(v(67.6, 2.5, -16.2), v(60, 2.0, -6.5), 44);
     await ui.fade(false);
-    await ui.say(T.name, 'Sit, sit. Class, we have a graduate with us today. Five years at that very desk, with Tachi beside them, passing notes.', T.color);
+    await ui.say(T.name, 'Sit, sit. Class, we have a graduate with us today. Five years at that very desk, with Ito beside them, passing notes.', T.color);
     teach('point');
     this.shot(v(64.2, 2.2, -12.4), v(61.2, 2.45, -5.3), 42, true);
     await ui.say(T.name, 'So we review what every first-year must know. Six elements move through the world.', T.color);
@@ -363,7 +363,7 @@ export class Story {
     this.shot(v(62.6, 1.8, -9.4), v(60, 1.75, -7.2), 34, true);
     await ui.say(T.name, 'Each of you was born holding one of these, or two. Hand signs only shape what you already carry. That is why a jutsu of your own element always costs you less.', T.color);
     this.shot(v(55.6, 1.2, -11.6), v(58, 0.85, -14.9), 36, true);
-    await ui.say('Susake', 'Sensei, what about the sixth one? The circle in the middle?', S.color);
+    await ui.say('Satoru', 'Sensei, what about the sixth one? The circle in the middle?', S.color);
     this.shot(v(61.6, 1.75, -9.6), v(60, 1.75, -7.2), 30, true);
     await ui.say(T.name, 'Ether. It does not use the world. It rewrites it. Nobody in Kagaribi has ever held it. There are only stories: a white cloak, far to the north.', T.color);
     this.shot(v(64.4, 1.3, -12.9), v(66, 1.2, -14.95), 30, true);
@@ -383,7 +383,7 @@ export class Story {
   // The class lines up along the south edge of the training ground to watch.
   toGround() {
     const N = this.G.cast, watch = () => ({ name: this.cheerT > 0 ? 'cheer' : 'idle' });
-    [...N.kids, N.susake].forEach((k, i) => { k.hidden = false; k.stage = null; k.follow = null; k.pos.set(53.5 + i * 2.5, 0, -33.6); k.yaw = Math.PI; k.anim = watch; });
+    [...N.kids, N.satoru].forEach((k, i) => { k.hidden = false; k.stage = null; k.follow = null; k.pos.set(53.5 + i * 2.5, 0, -33.6); k.yaw = Math.PI; k.anim = watch; });
     N.teacher.stage = null; N.teacher.pos.set(69.5, 0, -34.2); N.teacher.yaw = Math.PI - 0.3; N.teacher.anim = { name: 'arms' };
   }
 
@@ -392,7 +392,7 @@ export class Story {
     if (this.phase !== 'showcase' || this.busy) return;
     this.shown++; this.cheerT = 2.6;
     this.G.ui.objective(this.objectiveFor());
-    this.G.ui.toast(['', 'The class gasps', 'Susake is yelling something about pandas', 'The whole class is on its feet'][Math.min(3, this.shown)], 2.4);
+    this.G.ui.toast(['', 'The class gasps', 'Satoru is yelling something about pandas', 'The whole class is on its feet'][Math.min(3, this.shown)], 2.4);
     if (this.shown === 3) { this.busy = true; this.G.wait(3.4).then(() => this.farewell()); }
   }
 
@@ -403,8 +403,8 @@ export class Story {
     P.setState('free'); P.pos.set(60, 0, -37.6); P.yaw = 0; P.anim = { name: 'idle' };
     this.shot(v(63.6, 1.6, -40.6), v(60, 1.0, -34.6), 46, true);
     await ui.say(N.teacher.name, 'That, children, is five years of homework.', N.teacher.color);
-    this.shot(v(59.2, 1.0, -36.2), v(N.susake.pos.x, 0.9, N.susake.pos.z), 34, true);
-    await ui.say('Susake', 'Teach me the panda one! Please! I will tell Tachi I learned it first!', N.susake.color);
+    this.shot(v(59.2, 1.0, -36.2), v(N.satoru.pos.x, 0.9, N.satoru.pos.z), 34, true);
+    await ui.say('Satoru', 'Teach me the panda one! Please! I will tell Ito I learned it first!', N.satoru.color);
     this.shot(v(58.4, 1.5, -35.4), v(60, 1.5, -37.6), 32, true);
     await ui.say(P.hero.name, 'Ask me again when you can reach your own headband.', P.hero.color);
     await ui.say(P.hero.name, 'I have a long road north and two copper to walk it on. First, I need work.', P.hero.color);
@@ -450,7 +450,7 @@ export class Story {
     else if (name === 'morning' || name === 'academy' || name === 'showcase') {
       this.litBeacon(); this.morning(); G.state.coins = 2; ui.coins(2);
       if (name === 'morning') { P.pos.set(4, 0, 53); this.setPhase('morning'); }
-      else if (name === 'academy') { const S = G.cast.susake; S.hidden = false; S.pos.set(58, 0, -24); S.follow = P; P.pos.set(60, 0, -24); P.yaw = 0; this.setPhase('academy'); }
+      else if (name === 'academy') { const S = G.cast.satoru; S.hidden = false; S.pos.set(58, 0, -24); S.follow = P; P.pos.set(60, 0, -24); P.yaw = 0; this.setPhase('academy'); }
       else { this.toGround(); P.pos.set(60, 0, -39); this.shown = 0; this.setPhase('showcase'); }
     } else return false;
     G.cam.yaw = P.yaw + Math.PI;
@@ -470,7 +470,7 @@ export class Story {
     if (ph === 'omen' && near(POI.arena, 16)) { this.duel(); return; }
     if (ph === 'duel') { ui.prompt(null); return; }
     if (ph === 'festival' && near(POI.bonfire, 10.5) && low) { this.festival(); return; }
-    if (ph === 'morning' && near(POI.jobBoard, 13) && low) { this.meetSusake(); return; }
+    if (ph === 'morning' && near(POI.jobBoard, 13) && low) { this.meetSatoru(); return; }
 
     if (ph === 'inn' && near(POI.innDesk, 2.4) && low) { prompt = 'Book a room (10 copper)'; act = () => this.bookRoom(); }
     else if ((ph === 'bath' || ph === 'sleep') && near(POI.bath, 3.3) && low) { prompt = ph === 'bath' ? 'Take a bath' : null; act = ph === 'bath' ? () => this.bathe() : null; }

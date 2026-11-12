@@ -174,7 +174,7 @@ barrier.position.set(POI.arena.x, 3.5, POI.arena.z); barrier.visible = false;
 scene.add(barrier);
 
 // the ramen chef
-// the named cast: chef, innkeeper, teacher, Susake and his class
+// the named cast: chef, innkeeper, teacher, Satoru and his class
 {
   const C = G.cast, kr = [0x2a2028, 0x5a3b28, 0x1c2140, 0x8a5a3a, 0x6a6a72], kt = [0xd8a43c, 0x4f7fa8, 0xa8554a, 0x7a5a9a, 0x5f8f5a], ks = ['bun', 'spiky', 'tail', 'long', 'spiky'];
   C.chef = new Npc(G, { name: 'Chef Hinode', color: 0xffb45a, at: [POI.ramenChef.x, POI.ramenChef.z], yaw: Math.PI / 2, anim: () => ({ name: G.story.phase === 'explore' && G.story.busy ? 'cook' : 'idle' }),
@@ -183,11 +183,11 @@ scene.add(barrier);
     look: { hair: 0x8a8a94, hairStyle: 'bun', top: 0x7a4a6a, pants: 0x3a3048, accent: 0xf2ead8, eye: '#5a3b28', skin: 0xf0d2b4, grin: true, scale: 0.98 } });
   C.teacher = new Npc(G, { name: 'Sensei Awai', color: 0x9fd8b0, at: [POI.teacher.x, POI.teacher.z], yaw: Math.PI, hidden: true, line: 'This door is always open to you. Mind the chalk dust.',
     look: { hair: 0x3a3a40, hairStyle: 'tail', top: 0x3f6a5a, pants: 0x2c3550, accent: 0xe0c070, eye: '#3a8a5a', skin: 0xe0b088, stern: true, bracer: true, scale: 1.05 } });
-  C.susake = new Npc(G, { name: 'Susake', color: 0x9fe07a, at: [58, -24], hidden: true, speed: 9, line: 'Panda! Panda! Panda! Do the panda one!',
+  C.satoru = new Npc(G, { name: 'Satoru', color: 0x9fe07a, at: [58, -24], hidden: true, speed: 9, line: 'Panda! Panda! Panda! Do the panda one!',
     look: { hair: 0x8a5a3a, hairStyle: 'spiky', top: 0x4f9a5a, pants: 0xe9dcc0, accent: 0xf2c53d, eye: '#5a8a3a', grin: true, headband: true, sleeve: false, scale: 0.66 } });
   C.kids = ks.map((hairStyle, i) => new Npc(G, { name: 'Student', at: [54 + i * 2, -24], hidden: true, line: ['Do the lightning one again!', 'Is it true you ran on the river?', 'I am going to be a Lamplighter too.', 'Sensei cried a bit. Do not tell.', 'How many signs do you know? All of them?'][i],
     look: { hair: kr[i], hairStyle, top: kt[i], pants: 0x3a3a48, accent: 0xf2ead8, eye: ['#5a3b28', '#3a6fd8', '#3a8a5a', '#a070ff', '#5a3b28'][i], skin: [0xf2c9a4, 0xe0b088, 0xf6d8bc, 0xc99a76, 0xf2c9a4][i], grin: i % 2 === 0, scale: 0.6 + i * 0.015 } }));
-  G.npcs.push(C.chef, C.keeper, C.teacher, C.susake, ...C.kids);
+  G.npcs.push(C.chef, C.keeper, C.teacher, C.satoru, ...C.kids);
 }
 
 for (let i = 0; i < 6; i++) G.villagers.push(new Villager(G, i));

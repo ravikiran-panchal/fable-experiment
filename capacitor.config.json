@@ -1,6 +1,0 @@
-{
-  "appId": "io.github.ravikiranpanchal.willoffire",
-  "appName": "Hidden Ember",
-  "webDir": "app/www",
-  "android": { "backgroundColor": "#0e0b16" }
-}

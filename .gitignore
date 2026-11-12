@@ -4,21 +4,3 @@ Thumbs.db
 .freesound-key
 SESSION-HISTORY.md
 assets/audio/_src/
-
-# Android app
-app/www/
-android/app/build/
-android/build/
-android/.gradle/
-android/local.properties
-android/app/src/main/assets/public/
-*.jks
-*.keystore
-keystore.properties
-
-# Desktop app
-desktop/node_modules/
-desktop/www/
-desktop/out/
-desktop/icon.png
-desktop/*.provisionprofile

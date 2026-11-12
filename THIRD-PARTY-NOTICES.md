@@ -6,7 +6,6 @@ The game's own code, world and story are original. It includes or is built with:
 | --- | --- | --- |
 | three.js | 3D rendering | MIT |
 | MediaPipe Tasks Vision 1.2.2 (`vendor/mediapipe/`), including the hand landmark model | Camera hand tracking | Apache License 2.0 |
-| Capacitor | Android app wrapper | MIT |
 | Dela Gothic One (artakana) | Display typeface | SIL Open Font License 1.1 |
 | Zen Maru Gothic (Yoshimichi Ohira) | Text typeface | SIL Open Font License 1.1 |
 | esbuild | Build tool (not shipped) | MIT |

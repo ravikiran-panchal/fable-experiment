@@ -660,7 +660,7 @@ export function staged(a, G) {
   return s.anim || { name: 'idle' };
 }
 
-// A named character with a place in the story (innkeeper, teacher, Susake, the class, the chef).
+// A named character with a place in the story (innkeeper, teacher, Satoru, the class, the chef).
 export class Npc {
   constructor(G, o) {
     this.G = G; this.name = o.name; this.color = o.color ?? 0xf6ecd9; this.line = o.line || null;
