@@ -28,6 +28,7 @@ export class Weave {
     this.G = G;
     this.matcher = new WeaveMatcher(JUTSU);
     this.focus = false; this.focusT = 0; this.hinted = false; this.cool = 0;
+    this.sticky = false; this.awayT = 0; // sign mode: once opened it comes back after every jutsu until the player closes it
     this.cam = 'off'; // off | loading | on
     this.phone = matchMedia('(pointer: coarse)').matches; // phones: SIGN turns the camera on by itself and the panel stays small
     this.camOff = false; // the player switched the camera off in the panel: leave it off until they switch it back. A refused permission is asked again on every SIGN
@@ -39,23 +40,24 @@ export class Weave {
     this.el.pad.innerHTML = SIGN_ORDER.map((s, i) => `<button type="button" data-sign="${s}" title="${SIGN_HINTS[s]}"><kbd>${i + 1}</kbd>${icon(s)}<span>${SIGN_NAMES[s]}</span></button>`).join('');
     this.el.pad.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) this.push(b.dataset.sign); });
     this.el.camBtn.addEventListener('click', () => this.toggleCamera());
-    $('#weave-close').addEventListener('click', () => this.close());
+    $('#weave-close').addEventListener('click', () => this.close(null, true));
     addEventListener('keydown', (e) => {
       if (!this.focus || e.repeat) return;
       const n = /^Digit[1-6]$/.test(e.code) ? Number(e.code.slice(5)) : 0;
       if (n) { this.push(SIGN_ORDER[n - 1]); e.preventDefault(); }
-      if (e.code === 'Escape') this.close();
+      if (e.code === 'Escape') this.close(null, true);
     });
     addEventListener('pagehide', () => this.stopCamera());
     this.render();
   }
 
-  get timeScale() { return this.focus ? SLOW : 1; }
+  get slow() { return this.focus && this.focusT < MAX_FOCUS; } // the slow-motion part of a weave
+  get timeScale() { return this.slow ? SLOW : 1; }
   get canFocus() { const G = this.G, P = G.player; return !!P && !P.locked && !G.story.busy && P.state !== 'down' && !G.isCine(); }
 
   open(keepPath = false) {
     if (this.focus || !this.canFocus) return false;
-    this.focus = true; this.focusT = 0;
+    this.focus = true; this.focusT = 0; this.sticky = true; this.awayT = 0;
     this.matcher.list = this.known();
     if (!keepPath) this.matcher.reset();
     this.G.input.releasePointer();
@@ -67,11 +69,13 @@ export class Weave {
     return true;
   }
 
-  close(msg) {
+  // `byPlayer` ends sign mode. Any other close (a jutsu being cast, a cutscene) is a pause: the weave comes back by itself.
+  close(msg, byPlayer = false) {
+    if (byPlayer) this.sticky = false;
     if (!this.focus) return;
     this.focus = false; this.cool = 0.8;
     this.matcher.reset();
-    this.G.ui.app.classList.remove('weaving');
+    this.G.ui.app.classList.remove('weaving', 'slow');
     this.el.panel.hidden = true;
     if (msg) this.G.ui.toast(msg);
   }
@@ -183,8 +187,13 @@ export class Weave {
     if (!G.player) return;
     if (!this.hinted && this.canFocus) { this.hinted = true; G.ui.toast(this.phone ? 'New: tap SIGN to weave hand signs into jutsu' : 'New: press V to weave hand signs into jutsu', 4.5); }
     if (I.hit('camera')) this.toggleCamera();
-    if (I.hit('weave')) { if (this.focus) this.close(); else this.open(); }
+    if (I.hit('weave')) { if (this.focus || this.sticky) this.close(null, true); else this.open(); }
     if (this.focus && !this.canFocus) this.close();
+    if (this.sticky && !this.focus) { // sign mode is on: reopen as soon as the last jutsu is out of the hands
+      this.awayT += dt;
+      if (this.awayT > 8) this.sticky = false; // a long cutscene ends sign mode quietly
+      else if (this.cool <= 0 && this.canFocus) this.open();
+    }
 
     if (this.cam === 'on' && (this.focus || (!this.phone && this.canFocus && this.cool <= 0)) && this.readCamera(now)) { // phones only read hands while the weave is open (saves battery)
       if (!this.focus) this.matcher.list = this.known();
@@ -197,12 +206,15 @@ export class Weave {
 
     if (!this.focus) return;
     if (this.cam !== 'loading') this.focusT += dt; // the clock waits while the camera starts
-    if (this.focusT > MAX_FOCUS) return this.close('The weave slips');
+    if (this.focusT >= MAX_FOCUS && !this.spent) G.ui.toast('Focus spent: time runs normally. Signs still work', 3);
+    this.spent = this.focusT >= MAX_FOCUS;
+    G.ui.app.classList.toggle('slow', !this.spent);
+    this.el.panel.querySelector('.w-timer').classList.toggle('spent', this.spent);
     const seen = this.signs.has('gate') ? 'gate' : [...this.signs][0];
     this.el.status.textContent = this.cam === 'on'
       ? (!this.hands.length ? 'Show your hand to the camera' : seen ? `Seeing: ${SIGN_NAMES[seen]}` : 'Hand found. Shape not clear yet')
       : this.cam === 'loading' ? 'Starting the camera… you can tap the signs meanwhile' : this.phone ? 'Tap the signs in order' : 'Press 1 to 6, or tap a sign';
-    this.el.panel.style.setProperty('--left', (1 - this.focusT / MAX_FOCUS).toFixed(3));
+    this.el.panel.style.setProperty('--left', Math.max(0, 1 - this.focusT / MAX_FOCUS).toFixed(3));
     this.el.panel.style.setProperty('--hold', this.matcher.hold.toFixed(2));
     if (G.frameN % 10 === 0) this.render(); // keeps the "not enough ki" dimming current
   }

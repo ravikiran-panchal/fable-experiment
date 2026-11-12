@@ -135,8 +135,8 @@ small { font-size: 0.72em; letter-spacing: 0.08em; text-transform: uppercase; co
 .eyebrow b { color: var(--paper); border: 1px solid var(--ember); padding: 1px 7px; margin-left: 8px; white-space: nowrap; }
 .hint b { color: var(--ember); }
 #view { transition: filter 0.25s; }
-.weaving #view { filter: saturate(0.55) brightness(0.72) contrast(1.08); }
-.weaving #vignette { box-shadow: inset 0 0 220px 30px rgba(10, 6, 24, 0.85); }
+.weaving.slow #view { filter: saturate(0.55) brightness(0.72) contrast(1.08); }
+.weaving.slow #vignette { box-shadow: inset 0 0 220px 30px rgba(10, 6, 24, 0.85); }
 .eye #vignette { box-shadow: inset 0 0 170px 24px rgba(255, 40, 40, 0.42); }
 .weaving .keys, .weaving .map { opacity: 0; }
 #sign-pill { border-color: var(--ki); }
@@ -289,3 +289,12 @@ small { font-size: 0.72em; letter-spacing: 0.08em; text-transform: uppercase; co
   #weave-pad kbd { display: none; }
   .weaving .map { display: none; }
 }
+
+/* the objective folds into a small button on phones */
+.touch .objective { pointer-events: auto; }
+.objective small::after { content: ""; }
+.objective.mini { padding: 6px 10px; border-left-width: 3px; }
+.objective.mini p { display: none; }
+.objective.mini small { color: var(--paper); }
+.objective.mini small::after { content: " ›"; color: var(--ember); }
+.w-timer.spent { opacity: 0.25; }

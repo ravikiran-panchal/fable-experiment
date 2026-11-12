@@ -17,13 +17,15 @@ export class UI {
       foes: $('#foes'), foe: [$('#foe0'), $('#foe1')], objective: $('#objective'), prompt: $('#prompt'), dialog: $('#dialog'),
       card: $('#card'), callout: $('#callout'), toast: $('#toast'), fade: $('#fade'), dmg: $('#dmg'), vignette: $('#vignette'),
       title: $('#title'), heroes: $('#heroes'), start: $('#start'), map: $('#minimap'), tInteract: $('#t-interact'),
-      view: $('#view'), choices: $('#choices'), coins: $('#coins'), wallet: $('#wallet'),
+      objBox: $('.objective'), view: $('#view'), choices: $('#choices'), coins: $('#coins'), wallet: $('#wallet'),
     };
     this.dialogState = null; this.toastT = 0; this.cardT = 0; this.calloutT = 0;
     this.el.dialog.addEventListener('click', () => this.advance());
     // A tap on a choice button must be left alone: cancelling the touch here would also cancel the button's click on phones.
     this.el.dialog.addEventListener('touchend', (e) => { if (this.asking || e.target.closest?.('#choices')) return; e.preventDefault(); this.advance(); });
     this.el.view.addEventListener('touchstart', () => { if (this.dialogState) this.advance(); }, { passive: true }); // phones: tap anywhere to continue
+    this.objT = 0;
+    this.el.objBox.addEventListener('click', () => { if (this.el.objBox.classList.contains('mini')) this.objShow(); else if (this.G.input.touch) { this.objT = 0; this.el.objBox.classList.add('mini'); } });
     this.mapCtx = this.el.map.getContext('2d');
     this.mapBase = null;
   }
@@ -79,7 +81,12 @@ export class UI {
     this.el.foes.hidden = !list;
     if (list) list.forEach((f, i) => { this.el.foe[i].style.transform = `scaleX(${clamp(f.hp / f.maxHp, 0, 1)})`; });
   }
-  objective(t) { this.el.objective.textContent = t; }
+  // A new objective shows in full for a few seconds; on phones it then folds into a small GOAL button (tap to read it again).
+  objective(t) {
+    if (this.el.objective.textContent === t) return;
+    this.el.objective.textContent = t; this.objShow();
+  }
+  objShow() { this.el.objBox.classList.remove('mini'); this.objT = 6; }
   lookName(t) { this.el.look.textContent = t; }
   prompt(t) {
     this.el.prompt.hidden = !t;
@@ -165,6 +172,7 @@ export class UI {
   get talking() { return !!this.dialogState; }
 
   update(dt, input) {
+    if (this.objT > 0 && (this.objT -= dt) <= 0 && input.touch) this.el.objBox.classList.add('mini');
     const s = this.dialogState;
     if (s) {
       s.hold -= dt;
