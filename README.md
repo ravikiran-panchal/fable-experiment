@@ -1,4 +1,6 @@
-# Hidden Ember
+# Will of Fire: The Last Ember
+
+(Working title until November 2026: Hidden Ember.)
 
 A playable 3D anime-style ninja village that runs in a browser tab. Every building, character,
 animation, effect and cutscene is generated from code. There are no model files, no textures
@@ -181,7 +183,7 @@ npm run build
 ```
 
 `npm run build` rewrites `play.html`, `index.html` (the same file, for the public link) and
-`dist/hidden-ember.artifact.html` (the silent copy used for the Claude artifact link). Source lives in `src/`:
+`dist/will-of-fire.artifact.html` (the silent copy used for the Claude artifact link). Source lives in `src/`:
 
 | File | What it holds |
 | --- | --- |
@@ -200,9 +202,36 @@ npm run build
 `vendor/mediapipe/` holds the hand-tracking library and model (22 MB). It is only loaded when the camera is
 turned on. `npm run vendor` refreshes it after `npm install`.
 
+## Saved progress
+
+The game saves a checkpoint each time the story reaches a new step (11 steps, from arriving home to free
+roam), plus your coins. The title screen then shows **Continue** and a **Checkpoints** list for going back to
+any earlier step. **New game** clears the list. Saves live in the browser's or app's own storage on that
+device (`src/save.js`); nothing is sent anywhere. Not saved: the time of day and a half-finished job.
+
+## Store apps (Google Play and Mac App Store)
+
+The same game is wrapped twice. Both wrappers carry the game, sounds, typefaces and hand tracker inside them
+and make no outside requests.
+
+| Command | What it does |
+| --- | --- |
+| `npm run app` | Rebuilds the game, packs it into `app/www`, copies it into the `android` project |
+| `npm run android:setup` | Re-applies the app settings after `npx cap add android` |
+| `npm run desktop` | Packs the game into `desktop/www` for the Mac app |
+| `npm run desktop:test` | Starts the Mac app with no window and prints what works |
+| `npm run shots` | Takes the store screenshots and banners from the real game into `store/graphics` |
+| `npm run icons` | Remakes launcher icons, splash screens and the store icon (needs ffmpeg) |
+
+- Android: Capacitor project in `android/`. Compiling needs Android Studio.
+- Mac: Electron project in `desktop/` (`npm install` there first; `npm run mas` builds the App Store package
+  once your Apple certificate, profile and Team ID are in place). No Xcode needed.
+- Everything you do yourself, step by step, is in `store/LAUNCH-GUIDE.md`. Store texts and form answers are
+  next to it.
+
 ## Originality note
 
-The world, names, characters and story are original. It is a love letter to shinobi anime as a
+The world, characters and story are original. It is a love letter to shinobi anime as a
 genre and deliberately does not use any existing series' characters, names, symbols or locations,
 so it is safe to publish and monetise. The woven jutsu follow the same rule: the Hand Sign Jutsu site uses
 sound-alike names, this game uses its own (Ember Comet, Storm Thread and so on). Keep it that way.

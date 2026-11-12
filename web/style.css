@@ -228,3 +228,19 @@ small { font-size: 0.72em; letter-spacing: 0.08em; text-transform: uppercase; co
 #weave-list li.sealed { opacity: 0.4; border-left-style: dashed; }
 #weave-list li.sealed .w-seq { filter: blur(3px); }
 @media (prefers-reduced-motion: reduce) { #wallet { animation-duration: 0.01s; } }
+
+/* touch: small tool buttons under the minimap (camera near/far, training ground, time of day) */
+.tools { position: absolute; right: calc(var(--gut-r) + 140px); top: 14px; display: flex; flex-direction: column; gap: 5px; pointer-events: none; text-align: center; }
+.touch .foes { right: calc(var(--gut-r) + 214px); }
+.tools button { all: unset; pointer-events: auto; touch-action: none; font-family: var(--display); font-size: 10px; letter-spacing: 0.06em; color: var(--paper); padding: 7px 9px; background: rgba(14, 11, 22, 0.55); border: 1px solid rgba(246, 236, 217, 0.45); }
+.tools button.on { background: var(--hero); color: var(--ink); }
+
+/* title: subtitle and saved games */
+#title .subtitle { margin: 8px 0 0; font-family: var(--display); font-size: clamp(16px, 2.6vw, 30px); letter-spacing: 0.22em; text-transform: uppercase; color: var(--paper); text-shadow: 0 3px 0 var(--ink); }
+#saves { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; width: 100%; }
+#saves button { all: unset; box-sizing: border-box; cursor: pointer; padding: 9px 14px; font-weight: 700; font-size: 14px; background: var(--ink-soft); border: 1px solid var(--paper-dim); color: var(--paper); }
+#saves button.go { border-color: var(--ember); background: var(--ink); }
+#saves button:hover, #saves button:focus-visible { background: var(--ember); color: var(--ink); }
+#saves button small { display: block; font-weight: 500; font-size: 11px; color: inherit; opacity: 0.8; }
+#saves .cp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; width: 100%; }
+#saves .cp-list[hidden] { display: none; }

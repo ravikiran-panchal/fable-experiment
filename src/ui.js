@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { clamp } from './util.js';
 import { POI } from './world.js';
 import { ELEMENTS, AFFINITY } from './jutsu-list.js';
+import { CHECKPOINTS } from './save.js';
 
 const $ = (s) => document.querySelector(s);
 const hex = (c) => '#' + new THREE.Color(c).getHexString();
@@ -39,6 +40,22 @@ export class UI {
     });
     this.el.start.addEventListener('click', onStart);
   }
+  // Saved games on the title screen: Continue (latest checkpoint) and a list of earlier ones.
+  buildSaves(save, heroes, onLoad) {
+    const box = $('#saves'), list = save.list;
+    if (!list.length) { box.hidden = true; return; }
+    const name = (c) => (heroes.find((h) => h.id === c.hero) || heroes[0]).name, last = save.latest;
+    box.hidden = false;
+    box.innerHTML = `<button type="button" class="go" data-i="${list.length - 1}">Continue<small>${CHECKPOINTS[last.phase]} · ${name(last)} · ${last.coins} copper</small></button><button type="button" id="cp-toggle">Checkpoints (${list.length})</button><div class="cp-list" hidden>${list.map((c, i) => `<button type="button" data-i="${i}">${i + 1}. ${CHECKPOINTS[c.phase]}<small>${name(c)} · ${c.coins} copper</small></button>`).join('')}</div>`;
+    box.addEventListener('click', (e) => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      if (b.id === 'cp-toggle') { const l = box.querySelector('.cp-list'); l.hidden = !l.hidden; return; }
+      onLoad(list[Number(b.dataset.i)]);
+    });
+    this.el.start.textContent = 'New game';
+  }
+  checkpointName(p) { return CHECKPOINTS[p] || p; }
   pick(i) { [...this.el.heroes.children].forEach((b, k) => b.setAttribute('aria-pressed', k === i ? 'true' : 'false')); }
   hideTitle() { this.el.title.hidden = true; }
 
@@ -75,7 +92,7 @@ export class UI {
   blur(px, secs = 1) { const v = this.el.view; v.style.transition = `filter ${secs}s ease-in-out`; v.style.filter = px > 0 ? `blur(${px}px)` : ''; if (!px) setTimeout(() => { if (!v.style.filter) v.style.transition = ''; }, secs * 1000 + 50); }
 
   // ---- coins and the frog purse ----
-  coins(n) { this.el.coins.hidden = false; this.el.coins.lastElementChild.textContent = `${n} copper`; }
+  coins(n) { this.G.save?.coins(n); this.el.coins.hidden = false; this.el.coins.lastElementChild.textContent = `${n} copper`; }
   wallet(n, from = n) { // opens the purse in the middle of the screen; counts down from `from` to `n`
     const w = this.el.wallet, out = w.querySelector('b'), row = w.querySelector('.w-coins');
     w.hidden = false; this.walletAnim = { from, to: n, t: 0, out, row };

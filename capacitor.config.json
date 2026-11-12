@@ -1,0 +1,6 @@
+{
+  "appId": "io.github.ravikiranpanchal.willoffire",
+  "appName": "Will of Fire",
+  "webDir": "app/www",
+  "android": { "backgroundColor": "#0e0b16" }
+}

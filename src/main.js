@@ -15,6 +15,7 @@ import { Weave } from './weave.js';
 import { Ether } from './ether.js';
 import { Dream } from './dream.js';
 import { Jobs } from './jobs.js';
+import { Save } from './save.js';
 import { makeCharacter } from './character.js';
 import { HEROES, Player, Gouma, Yoru, Villager, Npc, Projectiles } from './actors.js';
 import { clamp, damp, dampAngle, lerp } from './util.js';
@@ -41,6 +42,7 @@ const G = {
 };
 if (typeof window !== 'undefined') window.__game = G;
 
+G.save = new Save();
 G.env = new Env(scene, renderer);
 G.world = new World(scene);
 G.fx = new FX(scene);
@@ -197,9 +199,10 @@ const previews = HEROES.map((h, i) => {
   scene.add(c.root);
   return c;
 });
-function start() {
+function start(cp = null) {
   if (started) return;
   started = true;
+  if (cp) picked = Math.max(0, HEROES.findIndex((h) => h.id === cp.hero)); else G.save.reset(); // a new game starts a new list of checkpoints
   G.audio.unlock();
   for (const c of previews) scene.remove(c.root);
   const hero = HEROES[picked];
@@ -207,22 +210,25 @@ function start() {
   G.ui.setHero(hero); G.ui.hideTitle(); G.ui.lookName(LOOK_NAMES[G.env.lookName]);
   canvas.focus?.();
   const hash = (location.hash || '').slice(1);
-  if (hash === 'fight') { G.env.setLook('omen', true); G.state.omen = true; for (const n of G.villagers) n.hidden = true; G.placeRogues(); for (const r of G.rogues) r.char.root.visible = true; G.player.pos.set(0, 0, -12); G.ui.lookName(LOOK_NAMES.omen); G.story.setPhase('omen'); }
+  if (cp) G.story.restore(cp);
+  else if (hash === 'fight') { G.env.setLook('omen', true); G.state.omen = true; for (const n of G.villagers) n.hidden = true; G.placeRogues(); for (const r of G.rogues) r.char.root.visible = true; G.player.pos.set(0, 0, -12); G.ui.lookName(LOOK_NAMES.omen); G.story.setPhase('omen'); }
   else if (hash === 'roam') { G.story.setPhase('explore'); }
   else if (hash === 'dojo') { G.player.pos.set(POI.training.x, 0, POI.training.z + 9); G.player.yaw = Math.PI; G.cam.yaw = 0; G.story.setPhase('free'); G.ui.objective('Training ground. V opens the sign weave, B turns on your camera'); }
   else if (hash === 'ether') { G.state.ether = true; G.player.pos.set(POI.training.x, 0, POI.training.z + 9); G.player.yaw = Math.PI; G.cam.yaw = 0; G.story.setPhase('free'); G.ui.objective('Ether practice. V, then Gate + Fist (Mirror Melt) or Gate + Spike + Fist (Dust Verdict)'); }
   else if (hash === 'beacon') { G.env.setLook('dusk', true); G.player.pos.set(0, G.world.beaconTopY + 3, POI.pagoda.z + 2); G.story.setPhase('beacon'); }
   else if (!G.story.jump(hash)) G.story.intro();
 }
-G.ui.buildTitle(HEROES, (i) => { picked = i; }, start);
+G.ui.buildTitle(HEROES, (i) => { picked = i; }, () => start());
+G.ui.buildSaves(G.save, HEROES, (cp) => start(cp));
 addEventListener('keydown', (e) => {
   if (started) return;
   if (e.code === 'Digit1' || e.code === 'Digit2' || e.code === 'Digit3') { picked = Number(e.code.slice(5)) - 1; G.ui.pick(picked); }
   if (e.code === 'ArrowRight') { picked = (picked + 1) % 3; G.ui.pick(picked); }
   if (e.code === 'ArrowLeft') { picked = (picked + 2) % 3; G.ui.pick(picked); }
-  if (e.code === 'Enter') start();
+  if (e.code === 'Enter') start(G.save.latest);
 });
 G.start = (i = 0) => { picked = i; start(); };
+G.load = (cp = G.save.latest) => start(cp);
 G.setQuality = (q) => setQuality(q);
 G.isCine = () => cine;
 

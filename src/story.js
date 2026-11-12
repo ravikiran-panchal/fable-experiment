@@ -31,7 +31,7 @@ export class Story {
       free: 'Free roam. The job board north of the bridge pays copper. Z trains, T changes the time of day',
     }[this.phase] || '';
   }
-  setPhase(p) { this.phase = p; this.G.ui.objective(this.objectiveFor()); }
+  setPhase(p) { this.phase = p; this.G.ui.objective(this.objectiveFor()); if (this.G.player) this.G.save.add(p, this.G.player.hero.id, this.G.state.coins); }
   // Where the minimap diamond points.
   target() {
     return { explore: POI.ramenSeat, omen: POI.arena, beacon: POI.pagoda, festival: POI.bonfire, inn: POI.innDesk, bath: POI.bath, sleep: POI.futon, morning: POI.jobBoard, academy: POI.seat, showcase: POI.training }[this.phase] || null;
@@ -185,7 +185,7 @@ export class Story {
     P.anim = { name: 'cheer' };
     await G.wait(1.6);
     this.shot(v(46, 30, 34), v(0, 22, -60), 46);
-    ui.card('HIDDEN EMBER', 'The beacon is lit', 5);
+    ui.card('THE LAST EMBER', 'The beacon is lit', 5);
     const cols = [0xff5a6a, 0xffd060, 0x5fd8ff, 0xb48cff, 0x7dffb0, 0xff9a4a];
     for (let i = 0; i < 12; i++) {
       G.fx.firework(v((Math.random() - 0.5) * 110, 44 + Math.random() * 26, -60 + (Math.random() - 0.5) * 70), cols[i % cols.length]);
@@ -416,6 +416,27 @@ export class Story {
     await G.wait(4.8);
     this.release();
     this.setPhase('free');
+  }
+
+  // Load a saved checkpoint: put the world in the state that story step starts from.
+  restore(cp) {
+    const G = this.G, P = G.player, ui = G.ui, ph = cp.phase;
+    G.audio.play('music_village'); G.audio.play('amb_village');
+    G.state.coins = cp.coins; G.save.paused = true;
+    if (ph === 'explore') this.setPhase('explore');
+    else if (ph === 'omen') {
+      G.env.setLook('omen', true); G.state.omen = true; ui.lookName('Ill omen');
+      for (const n of G.villagers) n.hidden = true;
+      G.placeRogues(); for (const r of G.rogues) r.char.root.visible = true;
+      P.pos.set(0, 0, -8); this.setPhase('omen');
+    } else if (ph === 'beacon') { G.env.setLook('dusk', true); ui.lookName('Dusk'); P.pos.set(0, 0, -30); this.setPhase('beacon'); }
+    else if (ph === 'bath' || ph === 'sleep') { this.jump('inn'); P.pos.set(13, 0, 49.5); this.setPhase(ph); }
+    else if (ph === 'free') { this.jump('morning'); this.setPhase('free'); }
+    else this.jump(ph);
+    G.state.coins = cp.coins; ui.coins(cp.coins);
+    G.save.paused = false; G.save.add(ph, P.hero.id, cp.coins);
+    G.cam.yaw = P.yaw + Math.PI;
+    ui.toast('Loaded: ' + ui.checkpointName(ph), 3);
   }
 
   // Jump links (play.html#festival and so on), for testing and for filming one scene.

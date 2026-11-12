@@ -5,7 +5,7 @@ export class HandTracker {
   constructor() { this.task = null; this.delegate = null; }
 
   async load(base) {
-    const url = base + 'vision_bundle.mjs';
+    const url = base + (window.EMBER_VISION || 'vision_bundle.mjs'); // the phone app ships it as .js so its built-in server gives it the right type
     const lib = await import(url);
     const fileset = await lib.FilesetResolver.forVisionTasks(base + 'wasm');
     // Try the graphics chip first, fall back to the processor if the browser refuses.

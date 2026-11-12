@@ -1,5 +1,5 @@
 <div id="app">
-  <canvas id="view" aria-label="Hidden Ember game view"></canvas>
+  <canvas id="view" aria-label="Will of Fire game view"></canvas>
   <div id="vignette"></div>
   <div class="bar top"></div><div class="bar bottom"></div>
   <div id="dmg"></div>
@@ -27,6 +27,11 @@
 
   <div id="touch">
     <div class="stick"><div class="knob"></div></div>
+    <div class="tools">
+      <button type="button" data-act="view">CAM</button>
+      <button type="button" data-act="train">TRAIN</button>
+      <button type="button" data-act="time">TIME</button>
+    </div>
     <div class="pad">
       <button type="button" data-act="interact" class="t-small" id="t-interact">USE</button>
       <button type="button" data-act="throw" class="t-small">STAR</button>
@@ -78,13 +83,15 @@
     <div class="title-side" aria-hidden="true">篝火の里</div>
     <header>
       <p class="eyebrow">A playable anime village, built entirely from code <b>v3 · Chapter One: the Ether dream</b></p>
-      <h1>HIDDEN<br><span>EMBER</span></h1>
+      <h1>WILL OF<br><span>FIRE</span></h1>
+      <p class="subtitle">The Last Ember</p>
       <p class="lede">A fox in a dream sent you north to find the sixth element. Tonight the road brings you home, and by old custom the graduate who returns carries the village flame.</p>
     </header>
     <div class="pick">
       <p class="pick-label">Choose your Lamplighter</p>
       <div class="heroes" id="heroes"></div>
       <div class="go-row">
+        <div id="saves" hidden></div>
         <button type="button" id="start">Enter the village</button>
         <p class="hint" id="title-hint">Remember the dream, eat ramen, answer the knock at the pagoda, then stay for the bonfire, the inn and a morning at your old academy. Press <kbd>V</kbd> to weave hand signs into jutsu, with your real hands on camera (<kbd>B</kbd>) or the sign pad.</p>
       </div>
